@@ -1,6 +1,6 @@
 # ACP MQTT Decoder Framework
 
-![acp_mqtt_decoders architecture diagram](docs/images/acp_mqtt_decoders.png)
+![acp mqtt architecture diagram](../images/acp_local_mqtt.png)
 
 ## Requirement
 

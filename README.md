@@ -8,6 +8,8 @@ In addition, the instructions install `acp_decoders` which is a Python plugin fr
 to normalize / decode the data in the incoming messages, re-publishing the data on the
 `acp/...` topic.
 
+![acp_local_mqtt architecture diagram](images/acp_local_mqtt.png)
+
 ##
 
 Install `mosquitto` server and clients
