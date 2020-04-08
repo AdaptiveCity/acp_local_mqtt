@@ -32,7 +32,9 @@ class DecoderManager():
     # Sync class init
     ###################
     def __init__(self):
-        print("DecoderManager __init__")
+        print("DecoderManager __init__", flush=True)
+        print("{} acp_decoders started\n".format(self.ts_string()),file=sys.stderr,flush=True)
+
         self.settings = {}
         self.settings["decoders"] = []
 
@@ -146,7 +148,7 @@ class DecoderManager():
     # import a decoder, given name
     # Will add { "name": , "decoder": } to self.decoders list
     def import_decoder(self, decoder_name):
-        print("loading Decoder {}".format(decoder_name))
+        print("loading Decoder {}".format(decoder_name), flush=True)
         module_name = 'decoders.'+decoder_name
         # A new module can be imported with importlib.import_module()
         # BUT an already loaded module must use importlib.reload for update to work.
@@ -157,7 +159,7 @@ class DecoderManager():
             module = importlib.import_module(module_name)
         # now we have the refreshed/new module, so put Decoder on list self.decoders
         decoder = module.Decoder(self.settings)
-        print("    loaded Decoder {}".format(decoder_name))
+        print("    loaded Decoder {}".format(decoder_name), flush=True)
         self.decoders.append({"name": decoder_name, "decoder": decoder })
 
     ###############################################################
@@ -174,7 +176,7 @@ class DecoderManager():
                 if not "acp_ts" in decoded:
                     decoded["acp_ts"] = acp_ts
 
-                print("{} {} decoded by {}".format(acp_ts,decoded["acp_id"],decoder["name"]))
+                print("{} {} decoded by {}".format(acp_ts,decoded["acp_id"],decoder["name"]), flush=True)
                 #debug testing timeout, disabled send:
                 #self.send_output_message(topic, decoded)
                 msg_is_decoded = True
@@ -183,11 +185,11 @@ class DecoderManager():
         if msg_is_decoded:
             self.send_output_message(topic, decoded)
         else:
-            print("{} Incoming message not decoded\n{}\n".format(acp_ts, msg_bytes))
+            print("{} Incoming message not decoded\n{}\n".format(acp_ts, msg_bytes), flush=True)
 
     def send_output_message(self, topic, decoded):
         msg_bytes = json.dumps(decoded)
-        #print("publishing {}".format(msg_bytes))
+        #print("publishing {}".format(msg_bytes), flush=True)
         output_topic = self.settings["output_mqtt"]["topic_prefix"] + topic
         self.output_client.publish(output_topic, msg_bytes, qos=0)
 
@@ -197,30 +199,25 @@ class DecoderManager():
 
     def input_on_connect(self, client, flags, rc, properties):
         print('INPUT Connected to {} as {}'.format(self.settings["input_mqtt"]["host"],
-                                                   self.settings["input_mqtt"]["user"]))
+                                                   self.settings["input_mqtt"]["user"]), flush=True)
         client.subscribe('#', qos=0)
 
     def input_on_message(self, client, topic, msg_bytes, qos, properties):
         # IMPORTANT! We avoid a loop by ignoring input messages with the output prefix
         if not topic.startswith(self.settings["output_mqtt"]["topic_prefix"]):
             if DEBUG:
-                print('INPUT RECV MSG:', msg_bytes)
+                print('INPUT RECV MSG:', msg_bytes, flush=True)
             self.handle_input_message(topic, msg_bytes)
         else:
             if DEBUG:
-                print('INPUT RECV COOKED MSG SKIPPED')
+                print('INPUT RECV COOKED MSG SKIPPED', flush=True)
 
     def input_on_disconnect(self, client, packet, exc=None):
-        print('INPUT Disconnected')
+        print('INPUT Disconnected', flush=True)
+        print("{} INPUT Disconnected\n".format(self.ts_string()),file=sys.stderr,flush=True)
 
     def input_on_subscribe(self, client, mid, qos, properties):
-        print('INPUT SUBSCRIBED to {}'.format(self.settings["input_mqtt"]["topic"]))
-
-    async def finish(self):
-        await self.STOP.wait()
-        print("\nDecoderManager interrupted")
-        await self.input_client.disconnect()
-        await self.output_client.disconnect()
+        print('INPUT SUBSCRIBED to {}'.format(self.settings["input_mqtt"]["topic"]), flush=True)
 
     ###############################################################
     # MQTT OUTPUT
@@ -228,18 +225,19 @@ class DecoderManager():
 
     def output_on_connect(self, client, flags, rc, properties):
         print('OUTPUT Connected to {} as {}'.format(self.settings["output_mqtt"]["host"],
-                                                   self.settings["output_mqtt"]["user"]))
+                                                   self.settings["output_mqtt"]["user"]), flush=True)
 
     def output_on_disconnect(self, client, packet, exc=None):
-        print('OUTPUT Disconnected')
+        print('OUTPUT Disconnected', flush=True)
+        print("{} OUTPUT Disconnected\n".format(self.ts_string()),file=sys.stderr,flush=True)
 
     # These GMQTT methods here for completeness although not used
 
     def output_on_message(self, client, topic, msg_bytes, qos, properties):
-        print('OUTPUT RECV MSG?:', msg_bytes)
+        print('OUTPUT RECV MSG?:', msg_bytes, flush=True)
 
     def output_on_subscribe(self, client, mid, qos, properties):
-        print('OUTPUT SUBSCRIBED? to {}')
+        print('OUTPUT SUBSCRIBED? to {}', flush=True)
 
     ###############################################################
     # CLEANUP on EXIT SIGNAL (SIGINT or SIGTERM)
@@ -247,10 +245,11 @@ class DecoderManager():
 
     async def finish(self):
         await self.STOP.wait()
-        print("\nDecoderManager interrupted, closing MQTT clients")
+        print("\nDecoderManager interrupted, closing MQTT clients", flush=True)
+        print("{} DecoderManager interrupted - disconnecting\n".format(self.ts_string()),file=sys.stderr,flush=True)
         await self.input_client.disconnect()
-        # debug testing timeout bug, disabling output mqtt:
         await self.output_client.disconnect()
+
 
 ###################################################################
 # Async main

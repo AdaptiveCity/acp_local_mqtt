@@ -12,9 +12,15 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 cd $SCRIPT_DIR
 
-source venv/bin/activate
+pid=$(pgrep -f "python3 acp_decoders.py")
 
-python3 acp_decoders.py
-
-# note SHOULD PIPE OUTPUT TO /var/log/acp_prod
+if [ $? -eq 0 ]
+then
+    echo $(date '+%s') $SCRIPT_DIR/run.sh FAIL: acp_decoders.py already running as PID $pid
+    exit 1
+else
+    source venv/bin/activate
+    python3 acp_decoders.py
+    exit 0
+fi
 
