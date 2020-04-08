@@ -10,9 +10,9 @@ to normalize / decode the data in the incoming messages, re-publishing the data 
 
 ![acp_local_mqtt architecture diagram](images/acp_local_mqtt.png)
 
-##
+On the ACP platform, this repo should be installed as the `acp_prod` user.
 
-Install `mosquitto` server and clients
+## Install `mosquitto` server and clients
 ```
 sudo apt install mosquitto mosquitto-clients
 ```
@@ -27,9 +27,9 @@ Note the MQTT broker is *open to anyone* at this point.
 ## Require passwords
 
 ```
-sudo cp ~acp_prod/acp_prod/secrets/mosquitto_passwd /etc/mosquitto/passwd
+sudo cp ~acp_prod/acp_local_mqtt/secrets/mosquitto_passwd /etc/mosquitto/passwd
 
-sudo cp ~acp_prod/acp_prod/mosquitto/default.conf /etc/mosquitto/conf.d/
+sudo cp ~acp_prod/acp_local_mqtt/default.conf /etc/mosquitto/conf.d/
 
 sudo systemctl stop mosquitto
 
@@ -38,7 +38,7 @@ service mosquitto status
 sudo systemctl start mosquitto
 ```
 
-View the usernames with
+View the usernames (and hashed passwords) with
 ```
 cat /etc/mosquitto/passwd
 ```
@@ -58,11 +58,11 @@ Giving the username password should work: `mosquitto_sub -v -t '#' -u <username>
 
 We will overwrite the non-encrypting `/etc/mosquitto/conf.d/default.conf`:
 
-First, copy and edit the `acp_prod/mosquitto/default_ssl.conf` to INCLUDE THE CORRECT HOSTNAME from the
+**First**, copy and edit the `acp_local_mqtt/default_ssl.conf` to **INCLUDE THE CORRECT HOSTNAME** from the
 certificate.
 
 ```
-sudo cp ~acp_prod/acp_prod/mosquitto/default_ssl.conf /etc/mosquitto/conf.d/default.conf
+sudo cp ~acp_prod/acp_local_mqtt/default_ssl.conf /etc/mosquitto/conf.d/default.conf
 ```
 
 Note this file will allow connections to BOTH port 1883 (plaintext) and 8883 (SSL).
@@ -70,8 +70,8 @@ Note this file will allow connections to BOTH port 1883 (plaintext) and 8883 (SS
 Mosquitto can be restarted with:
 ```
 sudo systemctl stop mosquitto
-sudo systemctl status mosquitto
 sudo systemctl start mosquitto
+sudo systemctl status mosquitto
 ```
 
 ## Test a plaintext subscribe via a local console with 
@@ -92,7 +92,7 @@ mosquitto_pub -t 'hello' -m 'world' -u <username> -P <password> -p 8883 -h <host
 
 Add the mosquitto bridge config:
 ```
-sudo cp ~acp_prod/acp_prod/secrets/mosquitto_ttn.conf /etc/mosquitto/conf.d/
+sudo cp ~acp_prod/acp_local_mqtt/secrets/mosquitto_ttn.conf /etc/mosquitto/conf.d/
 ```
 
 Restart mosquitto as before.
@@ -106,5 +106,5 @@ mosquitto_sub -t '+/devices/+/up' -u <username> -P <password>
 
 ## Install `acp_decoders`
 
-See `acp_decoders/README.md`
+See [`acp_decoders/README.md`](acp_decoders/README.md)
 

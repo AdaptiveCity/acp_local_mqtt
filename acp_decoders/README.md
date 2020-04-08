@@ -44,23 +44,21 @@ defined as STRING values.
 ## Install
 
 ```
-git clone https://github.com/AdaptiveCity/acp_mqtt_decoders
-cd acp_mqtt_decoders
+cd acp_decoders
 python3 -m venv venv
 source venv/bin/activate
 python3 -m pip install pip --upgrade
 python3 -m pip install wheel
 pip install -r requirements.txt
-mkdir secrets
 ```
 
 **collect and existing settings.json from another server**
 
 ## Configuration
 
-The configuration settings for `acp_mqtt_decoders` are in the file:
+The configuration settings for `acp_decoders` are in the file:
 ```
-secrets/settings.json
+acp_local_mqtt/secrets/settings.json
 ```
 
 E.g.
@@ -88,7 +86,7 @@ E.g.
 ## Run
 
 ```
-/home/acp_prod/acp_mqtt_decoders/run.sh
+/home/acp_prod/acp_local_mqtt/acp_decoders/run.sh
 ```
 
 ## Signal handling
@@ -99,7 +97,7 @@ The program will terminate cleanly with
 ```
 kill <pid>
 ```
-`exit.sh` is a script which does this.
+`acp_local_mqtt/acp_decoders/exit.sh` is a script which does this.
 
 ### Reload decoders
 
@@ -107,7 +105,7 @@ The program will reload its decoders (from `decoders.json`) with:
 ```
 kill -SIGALRM <pid>
 ```
-`reload.sh` is a script which does this.
+`acp_local_mqtt/acp_decoders/reload.sh` is a script which does this.
 
 The pid can be found interactively with `ps aux | grep acp_mqtt_decoders`
 
