@@ -1,0 +1,8 @@
+{
+    "decoders": [
+                    "elsys",
+                    "adeunis",
+                    "mqttlocal",
+                    "ttn_catchall"
+                ]
+}
