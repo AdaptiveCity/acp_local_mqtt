@@ -43,13 +43,19 @@ defined as STRING values.
 
 ## Install
 
+If necessary installl python venv module with:
 ```
-cd acp_decoders
+sudo apt install python3-venv
+```
+
+As `acp_prod` user:
+```
+cd ~acp_prod/acp_local_mqtt/acp_decoders
 python3 -m venv venv
 source venv/bin/activate
 python3 -m pip install pip --upgrade
 python3 -m pip install wheel
-pip install -r requirements.txt
+python3 -m pip install -r requirements.txt
 ```
 
 **collect and existing settings.json from another server**
