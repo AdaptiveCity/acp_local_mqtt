@@ -10,7 +10,13 @@ to normalize / decode the data in the incoming messages, re-publishing the data 
 
 ![acp_local_mqtt architecture diagram](images/acp_local_mqtt.png)
 
-On the ACP platform, this repo should be installed as the `acp_prod` user.
+## Installation
+
+On the ACP platform, this repo should be installed as the `acp_prod` user:
+```
+git clone https://github.com/AdaptiveCity/acp_local_mqtt
+```
+From another server, collect the `acp_local_mqtt/secrets` directory.
 
 ## Install `mosquitto` server and clients
 ```
