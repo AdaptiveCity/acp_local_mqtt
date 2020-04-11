@@ -109,8 +109,10 @@ E.g.
 ## Run
 
 ```
-/home/acp_prod/acp_local_mqtt/acp_decoders/run.sh
+nohup /home/acp_prod/acp_local_mqtt/acp_decoders/run.sh &
 ```
+
+`acp_decoders` will log to `/var/log/acp_prod/acp_decoders.log` and `acp_decoders.err`.
 
 ## Signal handling
 
