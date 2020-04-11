@@ -67,10 +67,13 @@ crontab -e
 @reboot /home/acp_prod/acp_local_mqtt/run.sh
 ```
 
-Start the decoders with:
+## Run
+
 ```
-/home/acp_prod/acp_local_mqtt/run.sh
+nohup /home/acp_prod/acp_local_mqtt/acp_decoders/run.sh &
 ```
+
+`acp_decoders` will log to `/var/log/acp_prod/acp_decoders.log` and `acp_decoders.err`.
 
 Check the running status of the local MQTT broker `mosquitto` and `acp_decoders`:
 ```
@@ -105,14 +108,6 @@ E.g.
                   }
 }
 ```
-
-## Run
-
-```
-nohup /home/acp_prod/acp_local_mqtt/acp_decoders/run.sh &
-```
-
-`acp_decoders` will log to `/var/log/acp_prod/acp_decoders.log` and `acp_decoders.err`.
 
 ## Signal handling
 
