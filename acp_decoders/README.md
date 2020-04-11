@@ -58,7 +58,14 @@ python3 -m pip install wheel
 python3 -m pip install -r requirements.txt
 ```
 
-**collect and existing settings.json from another server**
+**confirm file `acp_local_mqtt/secrets/settings.json` exists (from acp_local_mqtt install)**
+
+To run on reboot:
+```
+crontab -e
+
+@reboot /home/acp_prod/acp_local_mqtt/run.sh
+```
 
 ## Configuration
 
