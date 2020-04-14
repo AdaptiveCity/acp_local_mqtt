@@ -70,7 +70,7 @@ crontab -e
 ## Run
 
 ```
-nohup /home/acp_prod/acp_local_mqtt/acp_decoders/run.sh &
+nohup /home/acp_prod/acp_local_mqtt/run.sh & disown
 ```
 
 `acp_decoders` will log to `/var/log/acp_prod/acp_decoders.log` and `acp_decoders.err`.
@@ -80,7 +80,7 @@ Check the running status of the local MQTT broker `mosquitto` and `acp_decoders`
 /home/acp_prod/acp_local_mqtt/status.sh
 ```
 
-## Configuration
+## Configuration file
 
 The configuration settings for `acp_decoders` are in the file:
 ```

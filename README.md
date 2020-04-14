@@ -48,7 +48,7 @@ View the usernames (and hashed passwords) with
 ```
 cat /etc/mosquitto/passwd
 ```
-For the passwords see the `secrets` configs e.g. `~acp_prod/acp_prod/secrets/feedmqtt.local.json` 
+For the passwords see the `secrets` configs e.g. `~acp_prod/acp_prod/secrets/feedmqtt.local.json`
 which connects to this local mosquitto broker.
 
 ## Test the username / password protection
@@ -68,7 +68,8 @@ We will overwrite the non-encrypting `/etc/mosquitto/conf.d/default.conf`:
 certificate.
 
 ```
-sudo cp ~acp_prod/acp_local_mqtt/default_ssl.conf /etc/mosquitto/conf.d/default.conf
+sudo cp ~acp_prod/acp_local_mqtt/default_ssl.conf /etc/mosquitto/conf.d/
+sudo rm /etc/mosquitto/conf.d/default.conf
 ```
 
 Note this file will allow connections to BOTH port 1883 (plaintext) and 8883 (SSL).
@@ -80,7 +81,7 @@ sudo systemctl start mosquitto
 sudo systemctl status mosquitto
 ```
 
-## Test a plaintext subscribe via a local console with 
+## Test a plaintext subscribe via a local console with
 
 ```
 mosquitto_sub -v -h localhost -t '#' -u <username> -P <password>
@@ -96,9 +97,13 @@ mosquitto_pub -t 'hello' -m 'world' -u <username> -P <password> -p 8883 -h <host
 
 ## Create a bridge to The Things Network
 
-Add the mosquitto bridge config:
+Add the mosquitto bridge config to TTN:
 ```
 sudo cp ~acp_prod/acp_local_mqtt/secrets/mosquitto_ttn.conf /etc/mosquitto/conf.d/
+```
+If this is NOT cdbb.uk, add the mosquitto bridge config to cdbb.uk:
+```
+sudo cp ~acp_prod/acp_local_mqtt/secrets/mosquitto_cdbb.conf /etc/mosquitto/conf.d/
 ```
 
 Restart mosquitto as before.
