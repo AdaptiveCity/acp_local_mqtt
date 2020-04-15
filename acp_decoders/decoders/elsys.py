@@ -11,6 +11,8 @@
 #    test(message, params): returns true|false whether this decoder will handle message
 #    decode(message, params): returns Python dictionary of decoded message, or raises DecodeError
 
+DEBUG = False
+
 import base64
 import simplejson as json
 from datetime import datetime
@@ -43,8 +45,6 @@ TYPE_EXT_TEMP2    = 0x19     #2bytes -3276.5C-->3276.5C
 TYPE_EXT_DIGITAL2 = 0x1A     # 1bytes value 1 or 0
 TYPE_EXT_ANALOG_UV= 0x1B     # 4 bytes signed int (uV)
 TYPE_DEBUG        = 0x3D     # 4bytes debug
-
-DEBUG = False
 
 class Decoder(object):
     def __init__(self,settings=None):
@@ -100,17 +100,21 @@ class Decoder(object):
         if DEBUG:
             print("Elsys decode() rawb64 {}".format(rawb64))
 
-        decoded = self.decodePayload(self.b64toBytes(rawb64))
-
-        if DEBUG:
-            print("Elsys decode() decoded {}".format(decoded))
+        try:
+            decoded = self.decodePayload(self.b64toBytes(rawb64))
+            msg_dict[self.decoded_property] = decoded
+            if DEBUG:
+                print("Elsys decode() decoded {}".format(decoded))
+        except Exception as e:
+            # DecoderManager will add acp_ts using server time
+            print("Elsys decodePayload() {} exception {}".format(type(e), e))
 
         # extract sensor id
         # add acp_id to original message
         msg_dict["acp_id"] = msg_dict["dev_id"]
 
         if DEBUG:
-            print("Elsys decode() acp_id {}".format(acp_id))
+            print("Elsys decode() acp_id {}".format(msg_dict["acp_id"]))
 
         # extract timestamp
         try:
@@ -123,10 +127,10 @@ class Decoder(object):
             msg_dict["acp_ts"] = acp_ts
         except Exception as e:
             # DecoderManager will add acp_ts using server time
-            print("Elsys decode() {} exception {}".format(type(e), e))
+            print("Elsys decode() timestamp {} exception {}".format(type(e), e))
 
         if DEBUG:
-            print("\nElsys decode() FINITO: {} {}\n".format(acp_id, acp_ts))
+            print("\nElsys decode() FINITO: {} {}\n".format(msg_dict["acp_id"], msg_dict["acp_ts"]))
 
         return msg_dict
 
