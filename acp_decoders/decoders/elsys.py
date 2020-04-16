@@ -90,7 +90,16 @@ class Decoder(object):
 
         msg_dict = json.loads(inc_msg)
 
+        # extract sensor id
+        # add acp_id to original message
+        msg_dict["acp_id"] = msg_dict["dev_id"]
+
+
         #printf(msg_dict)
+
+        type_array = msg_dict["dev_id"].split("-")
+
+        msg_dict["acp_type"] = type_array[0]+"-"+type_array[1]
 
         if DEBUG:
             print("\nElsys decode() DECODED:\n")
@@ -101,17 +110,15 @@ class Decoder(object):
             print("Elsys decode() rawb64 {}".format(rawb64))
 
         try:
-            decoded = self.decodePayload(self.b64toBytes(rawb64))
+            decoded = self.decodePayload(msg_dict, self.b64toBytes(rawb64))
             msg_dict[self.decoded_property] = decoded
             if DEBUG:
                 print("Elsys decode() decoded {}".format(decoded))
         except Exception as e:
             # DecoderManager will add acp_ts using server time
             print("Elsys decodePayload() {} exception {}".format(type(e), e))
-
-        # extract sensor id
-        # add acp_id to original message
-        msg_dict["acp_id"] = msg_dict["dev_id"]
+            msg_dict["ERROR"] = "acp_decoder elsys decodePayload exception"
+            return msg_dict
 
         if DEBUG:
             print("Elsys decode() acp_id {}".format(msg_dict["acp_id"]))
@@ -160,11 +167,14 @@ class Decoder(object):
             print("b64toBytes")
         return base64.b64decode(b64)
 
-    def decodePayload(self,data):
+    def decodePayload(self, msg_dict, data):
         obj = {}
-        obj["device"]="elsys"
+
+        acp_type = msg_dict["acp_type"]
+
         if DEBUG:
             print("data ",data," len ",len(data))
+
         i = 0
         while(i<len(data)):
             #Temperature
@@ -240,6 +250,9 @@ class Decoder(object):
             elif data[i] == TYPE_EXT_DIGITAL:
                 obj["digital"]=(data[i+1])
                 i+=1
+                if acp_type == "elsys-ems" and len(data) < 5 :
+                    msg_dict["acp_event"] = "openclose"
+                    msg_dict["acp_event_value"] = "open" if obj["digital"] == 0 else "close"
 
             #Distance sensor input
             elif data[i] == TYPE_EXT_DISTANCE:
