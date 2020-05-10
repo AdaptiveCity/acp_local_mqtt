@@ -3,6 +3,8 @@
                     "elsys",
                     "adeunis",
                     "mqttlocal",
-                    "ttn_catchall"
+                    "ttn_catchall",
+                    "zigbee_catchall"
                 ]
 }
+

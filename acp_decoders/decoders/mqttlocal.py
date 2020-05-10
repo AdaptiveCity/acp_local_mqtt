@@ -1,4 +1,5 @@
 import simplejson as json
+JSONDecodeError = json.errors.JSONDecodeError
 
 ## The mqtt local messages have the topic of the form csn/sensor-id/#
 
@@ -23,11 +24,13 @@ class Decoder:
 
         inc_msg = str(msg_bytes,'utf-8')
 
-        msg_dict = json.loads(inc_msg)
+        try:
+            msg_dict = json.loads(inc_msg)
+        except JSONDecodeError:
+            msg_dict = { "message": msg_bytes }
 
         msg_dict["acp_id"] = sid
 
         # DecoderManager will add "acp_ts"
 
         return msg_dict
-

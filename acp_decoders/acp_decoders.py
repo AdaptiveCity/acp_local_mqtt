@@ -163,7 +163,7 @@ class DecoderManager():
         self.decoders.append({"name": decoder_name, "decoder": decoder })
 
     ###############################################################
-    # Sensor data message handler
+    # Sensor data message handler for incoming messages
     ###############################################################
 
     def handle_input_message(self, topic, msg_bytes):
@@ -176,7 +176,11 @@ class DecoderManager():
                 if not "acp_ts" in decoded:
                     decoded["acp_ts"] = acp_ts
 
-                print("{} {} decoded by {}".format(acp_ts,decoded["acp_id"],decoder["name"]), flush=True)
+                if DEBUG:
+                    print("{} {} decoded by {}".format(
+                        acp_ts,
+                        decoded["acp_id"],
+                        decoder["name"]), flush=True)
                 #debug testing timeout, disabled send:
                 #self.send_output_message(topic, decoded)
                 msg_is_decoded = True
@@ -185,12 +189,34 @@ class DecoderManager():
         if msg_is_decoded:
             self.send_output_message(topic, decoded)
         else:
-            print("{} Incoming message not decoded\n{}\n".format(acp_ts, msg_bytes), flush=True)
+            print("{} Incoming message not decoded\n{}\n".format(
+                acp_ts,
+                msg_bytes), flush=True)
 
-    def send_output_message(self, topic, decoded):
-        msg_bytes = json.dumps(decoded)
+    ##########################################################################
+    # Publish decoded message to output topic.
+    # E.g. input topic might be 'csn/status/tele/power'
+    # Output topic will be <prefix>/<acp_id>/<original topic>.
+    # i.e. 'acp/tas-pow-45c7e8/csn/status/tele/power'
+    # where 'tas-pow-45c7e8' is the acp_id derived by a decoder.
+    ##########################################################################
+
+    def send_output_message(self, topic_in, decoded_dict):
+        # Build output topic <prefix>/<acp_id>/<original topic>
+        output_topic = self.settings["output_mqtt"]["topic_prefix"]
+        if "acp_id" in decoded_dict:
+            output_topic += decoded_dict["acp_id"]+"/"
+        else:
+            output_topic += "unknown_id/"
+        output_topic += topic_in
+        if DEBUG:
+            print("{} Publishing topic {}".format(
+                self.ts_string(),
+                output_topic), flush=True)
+
+        # Publish output message
+        msg_bytes = json.dumps(decoded_dict)
         #print("publishing {}".format(msg_bytes), flush=True)
-        output_topic = self.settings["output_mqtt"]["topic_prefix"] + topic
         self.output_client.publish(output_topic, msg_bytes, qos=0)
 
     ###############################################################
@@ -198,34 +224,49 @@ class DecoderManager():
     ###############################################################
 
     def input_on_connect(self, client, flags, rc, properties):
-        print('INPUT Connected to {} as {}'.format(self.settings["input_mqtt"]["host"],
-                                                   self.settings["input_mqtt"]["user"]), flush=True)
+        print('INPUT Connected to {} as {}'.format(
+            self.settings["input_mqtt"]["host"],
+            self.settings["input_mqtt"]["user"]), flush=True)
         client.subscribe('#', qos=0)
 
     def input_on_message(self, client, topic, msg_bytes, qos, properties):
         # IMPORTANT! We avoid a loop by ignoring input messages with the output prefix
         if not topic.startswith(self.settings["output_mqtt"]["topic_prefix"]):
             if DEBUG:
-                print('INPUT RECV MSG:', msg_bytes, flush=True)
+                print("{} acp_decoders INPUT MSG: {}\n{}".format(
+                    self.ts_string(),
+                    topic,
+                    msg_bytes), flush=True)
             self.handle_input_message(topic, msg_bytes)
         else:
             if DEBUG:
-                print('INPUT RECV COOKED MSG SKIPPED', flush=True)
+                print("{} acp_decoders skipping decoded: {}".format(
+                    self.ts_string(),
+                    topic), flush=True)
 
     def input_on_disconnect(self, client, packet, exc=None):
-        print('INPUT Disconnected', flush=True)
-        print("{} INPUT Disconnected\n".format(self.ts_string()),file=sys.stderr,flush=True)
+        print("{} acp_decoders INPUT Disconnected\n".format(
+            self.ts_string()),flush=True)
+        print("{} acp_decoders INPUT Disconnected\n".format(
+            self.ts_string()),file=sys.stderr,flush=True)
 
     def input_on_subscribe(self, client, mid, qos, properties):
-        print('INPUT SUBSCRIBED to {}'.format(self.settings["input_mqtt"]["topic"]), flush=True)
+        print('{} acp_decoders INPUT SUBSCRIBED to {}'.format(
+            self.ts_string(),
+            self.settings["input_mqtt"]["topic"]), flush=True)
 
     ###############################################################
     # MQTT OUTPUT
     ###############################################################
 
     def output_on_connect(self, client, flags, rc, properties):
-        print('OUTPUT Connected to {} as {}'.format(self.settings["output_mqtt"]["host"],
-                                                   self.settings["output_mqtt"]["user"]), flush=True)
+        # Log a connection statement to stdout and stderr
+        print('OUTPUT Connected to {} as {}'.format(
+            self.settings["output_mqtt"]["host"],
+            self.settings["output_mqtt"]["user"]), flush=True)
+        print('OUTPUT Connected to {} as {}'.format(
+            self.settings["output_mqtt"]["host"],
+            self.settings["output_mqtt"]["user"]),file=sys.stderr,flush=True)
 
     def output_on_disconnect(self, client, packet, exc=None):
         print('OUTPUT Disconnected', flush=True)
@@ -246,7 +287,8 @@ class DecoderManager():
     async def finish(self):
         await self.STOP.wait()
         print("\nDecoderManager interrupted, closing MQTT clients", flush=True)
-        print("{} DecoderManager interrupted - disconnecting\n".format(self.ts_string()),file=sys.stderr,flush=True)
+        print("{} DecoderManager interrupted - disconnecting\n".format(
+            self.ts_string()),file=sys.stderr,flush=True)
         await self.input_client.disconnect()
         await self.output_client.disconnect()
 
@@ -281,6 +323,3 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
 
     loop.run_until_complete(async_main())
-
-
-
