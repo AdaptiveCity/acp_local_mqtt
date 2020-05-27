@@ -2,14 +2,17 @@
 # Elsys sensor decoder
 #
 # Instantiate with:
-#    decoder = Elsys(expand, decoded_property)
+#
+#    from decoders.elsys import Decoder as Elsys
+#    decoder = Elsys(settings) # default settings=None
 #    where:
-#        expand = [True] | False:  decoder returns expanded original message with "payload_decoded" property.
-#        decoded_property = <string> ["payload_decoded"]: contains property name to contain decoded message
+#       settings["decoded_property"] contains property name to contain decoded message
+#       e.g. settings["decoded_property"] = "payload_cooked" (default if settings=None)
 #
 # Implements:
-#    test(message, params): returns true|false whether this decoder will handle message
-#    decode(message, params): returns Python dictionary of decoded message, or raises DecodeError
+#    test(topic, message_bytes): returns true|false whether this decoder will handle message
+#    decode(topic, message_bytes): returns Python dictionary of original message + decoded_property.
+#
 
 DEBUG = False
 
@@ -52,7 +55,10 @@ class Decoder(object):
 
         self.name = "elsys"
 
-        self.decoded_property = settings["decoded_property"]
+        if settings is not None and "decoded_property" in settings:
+            self.decoded_property = settings["decoded_property"]
+        else:
+            self.decoded_property = "payload_cooked"
 
         return
 
@@ -346,4 +352,3 @@ class Decoder(object):
             i+=1
 
         return obj
-
