@@ -114,11 +114,11 @@ class Decoder(object):
             print("RadioBridge decode() rawb64 {}".format(rawb64))
 
         try:
-            decoded = self.decodePayload(msg_dict, self.b64toBytes(rawb64))
-            if decoded is not None:
-                msg_dict[self.decoded_property] = decoded
+            decoded_payload = self.decodePayload(msg_dict, self.b64toBytes(rawb64))
+            if decoded_payload is not None:
+                msg_dict[self.decoded_property] = self.decoded_payload
             if DEBUG:
-                print("RadioBridge decode() decoded {}".format(decoded))
+                print("RadioBridge decode() decoded {}".format(decoded_payload))
         except Exception as e:
             # DecoderManager will add acp_ts using server time
             print("RadioBridge decodePayload() {} exception {}".format(type(e), e))
@@ -146,55 +146,6 @@ class Decoder(object):
 
         return msg_dict
 
-    def bin8dec(self, bin):
-        num=bin&0xFF;
-        if (0x80 & num):
-            num = - (0x0100 - num);
-        return num
-
-    def bin16dec(self, bin):
-        num=bin&0xFFFF;
-        if (0x8000 & num):
-            num = - (0x010000 - num);
-        return num
-
-    def hexToBytes(self, hex):
-        bytes = []
-        for c in range(0,len(hex),2):
-            bytes.append(int(hex[c: c+2],16))
-        return bytes
-
-    def b64ToHex(self, b64):
-        return base64.b64decode(b64).hex()
-
-    def b64toBytes(self,b64):
-        if DEBUG:
-            print("b64toBytes")
-        return base64.b64decode(b64)
-
-    def Hex(self, decimal):
-        decimal = ('0' + decimal.toString(16).toUpperCase()).slice(-2)
-        return decimal
-
-    def Convert(number, mode):
-        switch (mode) {
-            # for EXT-TEMP and NOP
-            case 0:
-                if number > 127:
-                    result = number - 256
-                else:
-                    result = number
-                break
-            #for ATH temp
-            case 1:
-                if number > 127:
-                    result = -+(number - 128).toFixed(1)
-                else:
-                    result = +number.toFixed(1) }
-                break
-        }
-        return result
-
     # Here we decode the original 'payload' from the RadioBridge sensor that was
     # provided in the "payload_raw" property of the message from TTN
     def decodePayload(self, msg_dict, payload_bytes):
@@ -203,14 +154,6 @@ class Decoder(object):
 
         if DEBUG:
             print("data ",payload_bytes," len ",len(payload_bytes))
-
-        # data structure which contains decoded messages
-        decoded = {}
-
-        # The first byte contains the protocol version (upper nibble) and packet counter (lower nibble)
-        ProtocolVersion = (payload_bytes[0] >> 4) & 0x0f
-        PacketCounter = payload_bytes[0] & 0x0f
-
 
         # the event type is defined in the second byte
         event = payload_bytes[1]
@@ -270,113 +213,86 @@ class Decoder(object):
         else:
             return None
         # add packet counter and protocol version to the end of the decode
-        decoded.Message += ", Packet Counter: " + PacketCounter
-        decoded.Message += ", Protocol Version: " + ProtocolVersion
+        # The first byte contains the protocol version (upper nibble) and packet counter (lower nibble)
+        PacketCounter = payload_bytes[0] & 0x0f
+        ProtocolVersion = (payload_bytes[0] >> 4) & 0x0f
+
+        decoded["packet_count"] = PacketCounter
+        decoded["protocol_version"] = ProtocolVersion
 
         return decoded
 
-    # the rest of the message decode is dependent on the type of event
-    switch (EventType) {
+    # ==================    RESET EVENT    ====================
+    def handle_RESET(self, payload_bytes):
 
-        # ==================    RESET EVENT    ====================
-        case RESET_EVENT:
-
-            decoded.Message = "Event: Reset"
+            decoded = {}
+            decoded["event"] = "reset"
 
             # third byte is device type, convert to hex format for case statement
-            DeviceTypeByte = Hex(payload_bytes[2])
+            DeviceTypeByte = payload_bytes[2]
 
             # device types are enumerated below
-            switch (DeviceTypeByte) {
-                case "01":
+            if DeviceTypeByte == 0x01 :
                     DeviceType = "Door/Window Sensor"
-                    break
-                case "02":
+            elif DeviceTypeByte == 0x02 :
                     DeviceType = "Door/Window High Security"
-                    break
-                case "03":
+            elif DeviceTypeByte == 0x03 :
                     DeviceType = "Contact Sensor"
-                    break
-                case "04":
+            elif DeviceTypeByte == 0x04 :
                     DeviceType = "No-Probe Temperature Sensor"
-                    break
-                case "05":
+            elif DeviceTypeByte == 0x05 :
                     DeviceType = "External-Probe Temperature Sensor"
-                    break
-                case "06":
+            elif DeviceTypeByte == 0x06 :
                     DeviceType = "Single Push Button"
-                    break
-                case "07":
+            elif DeviceTypeByte == 0x07 :
                     DeviceType = "Dual Push Button"
-                    break
-                case "08":
+            elif DeviceTypeByte == 0x08 :
                     DeviceType = "Acceleration-Based Movement Sensor"
-                    break
-                case "09":
+            elif DeviceTypeByte == 0x09 :
                     DeviceType = "Tilt Sensor"
-                    break
-                case "0A":
+            elif DeviceTypeByte == 0x0A :
                     DeviceType = "Water Sensor"
-                    break
-                case "0B":
+            elif DeviceTypeByte == 0x0B :
                     DeviceType = "Tank Level Float Sensor"
-                    break
-                case "0C":
+            elif DeviceTypeByte == 0x0C :
                     DeviceType = "Glass Break Sensor"
-                    break
-                case "0D":
+            elif DeviceTypeByte == 0x0D :
                     DeviceType = "Ambient Light Sensor"
-                    break
-                case "0E":
+            elif DeviceTypeByte == 0x0E :
                     DeviceType = "Air Temperature and Humidity Sensor"
-                    break
-                case "0F":
+            elif DeviceTypeByte == 0x0F :
                     DeviceType = "High-Precision Tilt Sensor"
-                    break
-                case "10":
+            elif DeviceTypeByte == 0x10 :
                     DeviceType = "Ultrasonic Level Sensor"
-                    break
-                case "11":
+            elif DeviceTypeByte == 0x11 :
                     DeviceType = "4-20mA Current Loop Sensor"
-                    break
-                case "12":
+            elif DeviceTypeByte == 0x12 :
                     DeviceType = "Ext-Probe Air Temp and Humidity Sensor"
-                    break
-                case "13":
+            elif DeviceTypeByte == 0x13 :
                     DeviceType = "Thermocouple Temperature Sensor"
-                    break
-                case "14":
+            elif DeviceTypeByte == 0x14 :
                     DeviceType = "Voltage Sensor"
-                    break
-                case "15":
+            elif DeviceTypeByte == 0x15 :
                     DeviceType = "Custom Sensor"
-                    break
-                case "16":
+            elif DeviceTypeByte == 0x16 :
                     DeviceType = "GPS"
-                    break
-                case "17":
+            elif DeviceTypeByte == 0x17 :
                     DeviceType = "Honeywell 5800 Bridge"
-                    break
-                case "18":
+            elif DeviceTypeByte == 0x18 :
                     DeviceType = "Magnetometer"
-                    break
-                case "19":
+            elif DeviceTypeByte == 0x19 :
                     DeviceType = "Vibration Sensor - Low Frequency"
-                    break
-                case "1A":
+            elif DeviceTypeByte == 0x1A :
                     DeviceType = "Vibration Sensor - High Frequency"
-                    break
-                default:
+            else:
                     DeviceType = "Device Undefined"
-                    break
-            }
 
-            decoded.Message += ", Device Type: " + DeviceType
+            decoded["device_type"] = DeviceType
 
             # the hardware version has the major version in the upper nibble, and the minor version in the lower nibble
             HardwareVersion = ((payload_bytes[3] >> 4) & 0x0f) + "." + (payload_bytes[3] & 0x0f)
 
-            decoded.Message += ", Hardware Version: v" + HardwareVersion
+            decoded["hardware_version"] = HardwareVersion
 
             # the firmware version has two different formats depending on the most significant bit
             FirmwareFormat = (payload_bytes[4] >> 7) & 0x01
@@ -384,110 +300,110 @@ class Decoder(object):
             # FirmwareFormat of 0 is old format, 1 is new format
             # old format is has two sections x.y
             # new format has three sections x.y.z
-            if (FirmwareFormat == 0)
+            if FirmwareFormat == 0 :
                 FirmwareVerison = payload_bytes[4] + "." + payload_bytes[5]
-            else
+            else:
                 FirmwareVerison = ((payload_bytes[4] >> 2) & 0x1F) + "." + ((payload_bytes[4] & 0x03) + ((payload_bytes[5] >> 5) & 0x07)) + "." + (payload_bytes[5] & 0x1F)
 
-            decoded.Message += ", Firmware Version: v" + FirmwareVerison
+            decoded["firmware_format"] = FirmwareVerison
 
-            break
+            return decoded
 
         # ================   SUPERVISORY EVENT   ==================
-
-        case SUPERVISORY_EVENT:
-            decoded.Message = "Event: Supervisory"
+        def handle_SUPERVISORY(self, payload_bytes):
+            decoded = {}
+            decoded["event"] = "supervisory"
 
             # note that the sensor state in the supervisory message is being depreciated, so those are not decoded here
 
             # battery voltage is in the format x.y volts where x is upper nibble and y is lower nibble
             BatteryLevel = ((payload_bytes[4] >> 4) & 0x0f) + "." + (payload_bytes[4] & 0x0f)
 
-            decoded.Message += ", Battery Voltage: " + BatteryLevel + "V"
+            decoded["battery_level"]= float(BatteryLevel)
 
             # the accumulation count is a 16-bit value
             AccumulationCount = (payload_bytes[9] * 256) + payload_bytes[10]
-            decoded.Message += ", Accumulation Count: " + AccumulationCount
-
+            decoded["accumulation_count"]= AccumulationCount
 
             # decode bits for error code byte
             TamperSinceLastReset = (payload_bytes[2] >> 4) & 0x01
-            decoded.Message += ", Tamper Since Last Reset: " + TamperSinceLastReset
+            decoded["tamper_reset"] = TamperSinceLastReset
 
             CurrentTamperState = (payload_bytes[2] >> 3) & 0x01
-            decoded.Message += ", Current Tamper State: " + CurrentTamperState
+            decoded["tamper_current"] = CurrentTamperState
 
             ErrorWithLastDownlink = (payload_bytes[2] >> 2) & 0x01
-            decoded.Message += ", Error With Last Downlink: " + ErrorWithLastDownlink
+            decoded["downlink_error"] = ErrorWithLastDownlink
 
             BatteryLow = (payload_bytes[2] >> 1) & 0x01
-            decoded.Message += ", Battery Low: " + BatteryLow
+            decoded["battery_low"] = BatteryLow
 
             RadioCommError = payload_bytes[2] & 0x01
-            decoded.Message += ", Radio Comm Error: " + RadioCommError
+            decoded["radio_error"] = RadioCommError
 
-            break
+            return decoded
 
         # ==================   TAMPER EVENT    ====================
-        case TAMPER_EVENT:
-            decoded.Message = "Event: Tamper"
+        def handle_TAMPER(self, payload_bytes):
+            decoded = {}
+            decoded["event"] = "tamper"
 
             TamperState = payload_bytes[2]
 
             # tamper state is 0 for open, 1 for closed
             if (TamperState == 0)
-                decoded.Message += ", State: Open"
+                decoded["tamper_state"] = "open"
             else
-                decoded.Message += ", State: Closed"
+                decoded["tamper_start"] = "closed"
 
-            break
+            return decoded
 
         # ==================   LINK QUALITY EVENT    ====================
-        case LINK_QUALITY_EVENT:
-            decoded.Message = "Event: Link Quality"
+        def handle_LINK_QUALITY(self, payload_bytes):
+            decoded = {}
+            decoded["event"] = "link_quality"
 
             CurrentSubBand = payload_bytes[2]
-            decoded.Message += ", Current Sub-Band: " + CurrentSubBand
+            decoded["sub_band"] = CurrentSubBand
 
             RSSILastDownlink = payload_bytes[3]
-            decoded.Message += ", RSSI of Last Downlink: " + RSSILastDownlink
+            decoded["rssi"] = RSSILastDownlink
 
             SNRLastDownlink = payload_bytes[4]
-            decoded.Message += ", SNR of Last Downlink: " + SNRLastDownlink
+            decoded["snr"] = SNRLastDownlink
 
-            break
+            return decoded
 
         # ==================   RATE LIMIT EXCEEDED EVENT    ====================
-        case RATE_LIMIT_EXCEEDED_EVENT:
-
+        def handle_RATE_LIMIT_EXCEEDED(self, payload_bytes):
+            decoded = {}
             # this feature is depreciated so it is not decoded here
-            decoded.Message = "Event: Rate Limit Exceeded. Depreciated Event And Not Decoded Here"
+            decoded["event"] = "rate_limit_exceeded_DEPRECATED"
 
-            break
+            return decoded
 
         # ==================   TEST MESSAGE EVENT    ====================
-        case TEST_MESSAGE_EVENT:
-
+        def handle_TEST_MESSAGE(self, payload_bytes):
+            decoded = {}
             # this feature is depreciated so it is not decoded here
-            decoded.Message = "Event: Test Message. Depreciated Event And Not Decoded Here"
+            decoded["event"] = "test_message_DEPRECATED"
 
-            break
-
+            return decoded
 
         # ================  DOOR/WINDOW EVENT  ====================
-        case DOOR_WINDOW_EVENT:
-
-            decoded.Message = "Event: Door/Window"
+        def handle_DOOR_WINDOW(self, payload_bytes):
+            decoded = {}
+            decoded["event"] = "door_window"
 
             SensorState = payload_bytes[2]
 
             # 0 is closed, 1 is open
             if (SensorState == 0)
-                decoded.Message += ", State: Closed"
+                decoded["state"] = "closed"
             else
-                decoded.Message += ", State: Open"
+                decoded["state"] = "open"
 
-            break
+            return decoded
 
         # ===============  PUSH BUTTON EVENT   ===================
         case PUSH_BUTTON_EVENT:
@@ -1133,3 +1049,52 @@ class Decoder(object):
 
             decoded.Message += ", Downlink: " + DownlinkEventDescription
             break
+
+    def bin8dec(self, bin):
+        num=bin&0xFF;
+        if (0x80 & num):
+            num = - (0x0100 - num);
+        return num
+
+    def bin16dec(self, bin):
+        num=bin&0xFFFF;
+        if (0x8000 & num):
+            num = - (0x010000 - num);
+        return num
+
+    def hexToBytes(self, hex):
+        bytes = []
+        for c in range(0,len(hex),2):
+            bytes.append(int(hex[c: c+2],16))
+        return bytes
+
+    def b64ToHex(self, b64):
+        return base64.b64decode(b64).hex()
+
+    def b64toBytes(self,b64):
+        if DEBUG:
+            print("b64toBytes")
+        return base64.b64decode(b64)
+
+    def Hex(self, decimal):
+        decimal = ('0' + decimal.toString(16).toUpperCase()).slice(-2)
+        return decimal
+
+    def Convert(number, mode):
+        switch (mode) {
+            # for EXT-TEMP and NOP
+            case 0:
+                if number > 127:
+                    result = number - 256
+                else:
+                    result = number
+                break
+            #for ATH temp
+            case 1:
+                if number > 127:
+                    result = -+(number - 128).toFixed(1)
+                else:
+                    result = +number.toFixed(1) }
+                break
+        }
+        return result
