@@ -406,130 +406,110 @@ class Decoder(object):
             return decoded
 
         # ===============  PUSH BUTTON EVENT   ===================
-        case PUSH_BUTTON_EVENT:
+        def handle_PUSH_BUTTON(self, payload_bytes):
+            decoded = {}
+            decoded["event"] = "push_button"
 
-            decoded.Message = "Event: Push Button"
+            ButtonID = payload_bytes[2]
 
-            ButtonID = Hex(payload_bytes[2])
+            # 01 and 02 used on two button
+            if ButtonID ==  0x01:
+                ButtonReference = "button_1"
+            elif ButtonID == 0x02 :
+                ButtonReference = "button_2"
+            # 03 is single button
+            elif ButtonID == 0x03 :
+                ButtonReference = "button_1"
+            # 12 when both buttons pressed on two button
+            elif ButtonID == 0x12 :
+                ButtonReference = "button_1&2"
+            else:
+                ButtonReference = "buttun_undefined"
 
-            switch (ButtonID) {
-                # 01 and 02 used on two button
-                case "01":
-                    ButtonReference = "Button 1"
-                    break
-                case "02":
-                    ButtonReference = "Button 2"
-                    break
-                # 03 is single button
-                case "03":
-                    ButtonReference = "Button 1"
-                    break
-                # 12 when both buttons pressed on two button
-                case "12":
-                    ButtonReference = "Both Buttons"
-                    break
-                default:
-                    ButtonReference = "Undefined"
-                    break
-            }
-
-            decoded.Message += ", Button ID: " + ButtonReference
+            decoded["button_id"] = ButtonReference
 
             ButtonState = payload_bytes[3]
 
-            switch (ButtonState) {
-                case 0:
-                    SensorStateDescription = "Pressed"
-                    break
-                case 1:
-                    SensorStateDescription = "Released"
-                    break
-                case 2:
-                    SensorStateDescription = "Held"
-                    break
-                default:
-                    SensorStateDescription = "Undefined"
-                    break
-            }
+            if ButtonState == 0 :
+                SensorStateDescription = "Pressed"
+            elif ButtonState == 1:
+                SensorStateDescription = "Released"
+            elif ButtonState ==  2:
+                SensorStateDescription = "Held"
+            else:
+                SensorStateDescription = "Undefined"
 
-            decoded.Message += ", Button State: " + SensorStateDescription
+            decoded["button_state"] = SensorStateDescription
 
-            break
+            return decoded
 
         # =================   CONTACT EVENT   =====================
-        case CONTACT_EVENT:
-
-            decoded.Message = "Event: Dry Contact"
+        def handle_CONTACT(self, payload_bytes):
+            decoded = {}
+            decoded["event"] = "contact"
 
             ContactState = payload_bytes[2]
 
             # if state byte is 0 then shorted, if 1 then opened
-            if (ContactState == 0)
-                SensorState = "Contacts Shorted"
-            else
-                SensorState = "Contacts Opened"
+            if ContactState == 0:
+                SensorState = "closed"
+            else:
+                SensorState = "open"
 
-            decoded.Message += ", Sensor State: " + SensorState
+            decoded["state"] = SensorState
 
-            break
+            return decoded
 
         # ===================  WATER EVENT  =======================
-        case WATER_EVENT:
-
-            decoded.Message = "Event: Water"
+        def handle_WATER(self, payload_bytes):
+            decoded = {}
+            decoded["event"] = "water"
 
             SensorState = payload_bytes[2]
 
             if (SensorState == 0)
-                decoded.Message += ", State: Water Present"
+                decoded["state"] = "wet"
             else
-                decoded.Message += ", State: Water Not Present"
+                decoded["state"] = "dry"
 
             WaterRelativeResistance = payload_bytes[3]
 
-            decoded.Message += ", Relative Resistance: " + WaterRelativeResistance
+            decoded["relative_resistance"] = WaterRelativeResistance
 
-            break
+            return decoded
 
         # ================== TEMPERATURE EVENT ====================
-        case TEMPERATURE_EVENT:
-
-            decoded.Message = "Event: Temperature"
+        def handle_TEMPERATURE(self, payload_bytes):
+            decoded = {}
+            decoded["event"] = "temperature"
 
             TemperatureEvent = payload_bytes[2]
 
             switch (TemperatureEvent) {
-                case 0:
-                    TemperatureEventDescription = "Periodic Report"
-                    break
-                case 1:
-                    TemperatureEventDescription = "Temperature Over Upper Threshold"
-                    break
-                case 2:
-                    TemperatureEventDescription = "Temperature Under Lower Threshold"
-                    break
-                case 3:
-                    TemperatureEventDescription = "Temperature Report-on-Change Increase"
-                    break
-                case 4:
-                    TemperatureEventDescription = "Temperature Report-on-Change Decrease"
-                    break
-                default:
-                    TemperatureEventDescription = "Undefined"
-                    break
-            }
+            if TemperatureEvent == 0:
+                TemperatureEventDescription = "periodic_report"
+            elif TemperatureEvent == 1:
+                TemperatureEventDescription = "above_threshold"
+            elif TemperatureEvent == 2:
+                TemperatureEventDescription = "below_threshold"
+            elif TemperatureEvent == 3:
+                TemperatureEventDescription = "change_increase"
+            elif TemperatureEvent == 4:
+                TemperatureEventDescription = "change_decrease"
+            else:
+                TemperatureEventDescription = "temperature_undefined"
 
-            decoded.Message += ", Temperature Event: " + TemperatureEventDescription
+            decoded["temperature_event"] = TemperatureEventDescription
 
             # current temperature reading
-            CurrentTemperature = Convert(payload_bytes[3], 0)
-            decoded.Message += ", Current Temperature: " + CurrentTemperature
+            CurrentTemperature = self.Convert(payload_bytes[3], 0)
+            decoded["temperature"] = CurrentTemperature
 
             # relative temp measurement for use with an alternative calibration table
-            RelativeMeasurement = Convert(payload_bytes[4], 0)
-            decoded.Message += ", Relative Measurement: " + RelativeMeasurement
+            RelativeMeasurement = self.Convert(payload_bytes[4], 0)
+            decoded["relative_temperature"] = RelativeMeasurement
 
-            break
+            return decoded
 
         # ====================  TILT EVENT  =======================
         case TILT_EVENT:
@@ -1080,7 +1060,7 @@ class Decoder(object):
         decimal = ('0' + decimal.toString(16).toUpperCase()).slice(-2)
         return decimal
 
-    def Convert(number, mode):
+    def Convert(self, number, mode):
         switch (mode) {
             # for EXT-TEMP and NOP
             case 0:
