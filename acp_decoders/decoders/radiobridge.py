@@ -290,7 +290,7 @@ class Decoder(object):
         decoded["device_type"] = DeviceType
 
         # the hardware version has the major version in the upper nibble, and the minor version in the lower nibble
-        HardwareVersion = ((payload_bytes[3] >> 4) & 0x0f) + "." + (payload_bytes[3] & 0x0f)
+        HardwareVersion = str((payload_bytes[3] >> 4) & 0x0f) + "." + str(payload_bytes[3] & 0x0f)
 
         decoded["hardware_version"] = HardwareVersion
 
@@ -301,9 +301,9 @@ class Decoder(object):
         # old format is has two sections x.y
         # new format has three sections x.y.z
         if FirmwareFormat == 0 :
-            FirmwareVerison = payload_bytes[4] + "." + payload_bytes[5]
+            FirmwareVerison = str(payload_bytes[4]) + "." + str(payload_bytes[5])
         else:
-            FirmwareVerison = ((payload_bytes[4] >> 2) & 0x1F) + "." + ((payload_bytes[4] & 0x03) + ((payload_bytes[5] >> 5) & 0x07)) + "." + (payload_bytes[5] & 0x1F)
+            FirmwareVerison = str((payload_bytes[4] >> 2) & 0x1F) + "." + str((payload_bytes[4] & 0x03) + ((payload_bytes[5] >> 5) & 0x07)) + "." + str(payload_bytes[5] & 0x1F)
 
         decoded["firmware_format"] = FirmwareVerison
 
@@ -317,7 +317,7 @@ class Decoder(object):
         # note that the sensor state in the supervisory message is being depreciated, so those are not decoded here
 
         # battery voltage is in the format x.y volts where x is upper nibble and y is lower nibble
-        BatteryLevel = ((payload_bytes[4] >> 4) & 0x0f) + "." + (payload_bytes[4] & 0x0f)
+        BatteryLevel = str((payload_bytes[4] >> 4) & 0x0f) + "." + str(payload_bytes[4] & 0x0f)
 
         decoded["battery_level"]= float(BatteryLevel)
 
