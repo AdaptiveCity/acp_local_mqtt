@@ -2,6 +2,7 @@
     "decoders": [
                     "elsys",
                     "adeunis",
+                    "radiobridge",
                     "mqttlocal",
                     "ttn_catchall",
                     "zigbee_catchall"
