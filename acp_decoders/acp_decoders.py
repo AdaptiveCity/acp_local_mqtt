@@ -68,9 +68,10 @@ class DecoderManager():
         self.read_settings()
 
         # Connect input and output MQTT brokers (which can be same or different)
-        await self.connect_input_mqtt()
-        # debug testing timeout, disabling start of publisher
         await self.connect_output_mqtt()
+        # Note we start output connection FIRST and await it,
+        # otherwise we risk getting an input and failing on publish.
+        await self.connect_input_mqtt()
 
     async def connect_input_mqtt(self):
         self.input_client = MQTTClient(None) # auto-generate client id
