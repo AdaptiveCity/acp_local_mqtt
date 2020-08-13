@@ -18,6 +18,7 @@ DEBUG = False
 
 import base64
 import simplejson as json
+import traceback
 from datetime import datetime
 
 TYPE_TEMP         = 0x01 #temp 2 bytes -3276.8°C -->3276.7°C
@@ -123,6 +124,7 @@ class Decoder(object):
         except Exception as e:
             # DecoderManager will add acp_ts using server time
             print("Elsys decodePayload() {} exception {}".format(type(e), e))
+            traceback.print_exc()
             msg_dict["ERROR"] = "acp_decoder elsys decodePayload exception"
             return msg_dict
 
@@ -293,13 +295,15 @@ class Decoder(object):
 
             #Grideye data
             elif data[i] == TYPE_GRIDEYE:
+                GRIDEYE_SIZE=64
                 obj["grideye"]="8x8 missing"
-                ref = data[i+1]
+                grideye_ref = data[i+1]
+                obj["grideye_ref"] = grideye_ref
                 i+=1
-                obj.grideye = []
-                for j in range(0,64):
-                    obj.grideye[j]=ref+(data[1+i+j]/10.0)
-                i+=64
+                obj["grideye"] = [None] * GRIDEYE_SIZE
+                for j in range(0,GRIDEYE_SIZE):
+                    obj["grideye"][j] = grideye_ref + (data[i+j]/10.0)
+                i += GRIDEYE_SIZE # overall size is GRIDEYE_SIZE+1 due to initial 'ref' byte
 
             #External Pressure
             elif data[i] == TYPE_PRESSURE:
