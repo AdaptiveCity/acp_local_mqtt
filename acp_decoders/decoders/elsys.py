@@ -293,17 +293,20 @@ class Decoder(object):
                 obj["waterleak"]=(data[i+1])
                 i+=1
 
-            #Grideye data
+            # 8x8 IR Grideye data
             elif data[i] == TYPE_GRIDEYE:
+                # data[i] = the field 'type' i.e. TYPE_GRIDEYE pixel array
+                # data[i+1] is the reference 'temperature base' for the pixels
+                # data[i+2..i+65] = a list of the 64 IR pixels as (degrees C * 10) offset from base
                 GRIDEYE_SIZE=64
                 obj["grideye"]="8x8 missing"
-                grideye_ref = data[i+1]
+                grideye_ref = data[i+1]                # this is the 'base' temperature
                 obj["grideye_ref"] = grideye_ref
-                i+=1
-                obj["grideye"] = [None] * GRIDEYE_SIZE
-                for j in range(0,GRIDEYE_SIZE):
-                    obj["grideye"][j] = grideye_ref + (data[i+j]/10.0)
-                i += GRIDEYE_SIZE # overall size is GRIDEYE_SIZE+1 due to initial 'ref' byte
+                obj["grideye"] = [None] * GRIDEYE_SIZE # initialize fixed size array
+                # actual temperature of pixel is (base temp) + (pixel value)/10
+                for pixel in range(0,GRIDEYE_SIZE):
+                    obj["grideye"][pixel] = grideye_ref + (data[i+2+pixel]/10.0)
+                i += 1 + GRIDEYE_SIZE # skip forward from type id, ref byte, pixels
 
             #External Pressure
             elif data[i] == TYPE_PRESSURE:
