@@ -33,7 +33,7 @@ class DecoderManager():
     ###################
     def __init__(self):
         print("DecoderManager __init__", flush=True)
-        print("{} acp_decoders started\n".format(self.ts_string()),file=sys.stderr,flush=True)
+        print("{} acp_decoders initialized\n".format(self.ts_string()),file=sys.stderr,flush=True)
 
         self.settings = {}
         self.settings["decoders"] = []
@@ -60,6 +60,7 @@ class DecoderManager():
     # Async initialization
     ###############################################################
     async def start(self):
+        print("{} acp_decoders started\n".format(self.ts_string()),file=sys.stderr,flush=True)
         # Define async events for exit and reload (will set via signals)
         self.STOP = asyncio.Event()
         self.RELOAD = asyncio.Event()
@@ -177,7 +178,7 @@ class DecoderManager():
                 if not "acp_ts" in decoded:
                     decoded["acp_ts"] = acp_ts
 
-                if DEBUG:
+                if True or DEBUG:
                     print("{} {} decoded by {}".format(
                         acp_ts,
                         decoded["acp_id"],
@@ -192,7 +193,7 @@ class DecoderManager():
         else:
             print("{} Incoming message not decoded\n{}\n".format(
                 acp_ts,
-                msg_bytes), flush=True)
+                msg_bytes), file=sys.stderr, flush=True)
 
     ##########################################################################
     # Publish decoded message to output topic.
@@ -227,7 +228,7 @@ class DecoderManager():
     def input_on_connect(self, client, flags, rc, properties):
         print('INPUT Connected to {} as {}'.format(
             self.settings["input_mqtt"]["host"],
-            self.settings["input_mqtt"]["user"]), flush=True)
+            self.settings["input_mqtt"]["user"]),file=sys.stderr, flush=True)
         client.subscribe('#', qos=0)
 
     def input_on_message(self, client, topic, msg_bytes, qos, properties):
@@ -243,7 +244,7 @@ class DecoderManager():
             if DEBUG:
                 print("{} acp_decoders skipping decoded: {}".format(
                     self.ts_string(),
-                    topic), flush=True)
+                    topic),file=sys.stderr, flush=True)
 
     def input_on_disconnect(self, client, packet, exc=None):
         print("{} acp_decoders INPUT Disconnected\n".format(

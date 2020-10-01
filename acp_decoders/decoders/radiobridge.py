@@ -19,7 +19,7 @@
 #    RADIO BRIDGE PACKET DECODER v1.0
 #    (c) 2019 RadioBridge USA by John Sheldon
 
-DEBUG = True
+DEBUG = False
 
 import base64
 import simplejson as json
