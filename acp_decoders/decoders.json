@@ -3,6 +3,7 @@
                     "elsys",
                     "adeunis",
                     "radiobridge",
+                    "sensedge",
                     "mqttlocal",
                     "ttn_catchall",
                     "zigbee_catchall"
