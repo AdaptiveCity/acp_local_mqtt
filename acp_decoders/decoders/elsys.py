@@ -101,12 +101,10 @@ class Decoder(object):
         # add acp_id to original message
         msg_dict["acp_id"] = msg_dict["dev_id"]
 
-
-        #printf(msg_dict)
-
         type_array = msg_dict["dev_id"].split("-")
 
-        msg_dict["acp_type"] = type_array[0]+"-"+type_array[1]
+        if len(type_array) >= 3:
+            msg_dict["acp_type_id"] = type_array[0]+"-"+type_array[1]
 
         if DEBUG:
             print("\nElsys decode() DECODED:\n")
@@ -178,7 +176,9 @@ class Decoder(object):
     def decodePayload(self, msg_dict, data):
         obj = {}
 
-        acp_type = msg_dict["acp_type"]
+        acp_type = ''
+        if "acp_type_id" in msg_dict:
+            acp_type = msg_dict["acp_type_id"]
 
         if DEBUG:
             print("data ",data," len ",len(data))

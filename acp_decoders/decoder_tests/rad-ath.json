@@ -1,0 +1,45 @@
+{
+  "module_name": "feedmqtt",
+  "module_id": "local",
+  "feed_id": "mqtt_ttn",
+  "filename": "1612518829.701_2021-02-05-09-53-49_rad-ath-003d0f",
+  "filepath": "2021/02/05",
+  "acp_ts": "1612518829.701",
+  "acp_feed_ts": "1612518829.701",
+  "msg_type": "feed_mqtt",
+  "app_id": "cambridge-sensor-network2",
+  "dev_id": "rad-ath-003d0f",
+  "hardware_serial": "0080000004003D0F",
+  "port": 1,
+  "counter": 8915,
+  "payload_raw": "Ew0ABiBkAA==",
+  "metadata": {
+    "time": "2021-02-05T09:53:49.455853587Z",
+    "frequency": 867.7,
+    "modulation": "LORA",
+    "data_rate": "SF7BW125",
+    "airtime": 56576000,
+    "coding_rate": "4/5",
+    "gateways": [
+      {
+        "gtw_id": "csn-mtcap-014abf",
+        "timestamp": 4149123204,
+        "time": "2021-02-05T10:56:27Z",
+        "channel": 0,
+        "rssi": -101,
+        "snr": 7.25,
+        "rf_chain": 0
+      },
+      {
+        "gtw_id": "eui-00800000a0004cba",
+        "timestamp": 1915873612,
+        "time": "",
+        "channel": 6,
+        "rssi": -80,
+        "snr": 9,
+        "rf_chain": 0
+      }
+    ]
+  },
+  "mqtt_topic": "cambridge-sensor-network2/devices/rad-ath-003d0f/up"
+}

@@ -98,12 +98,10 @@ class Decoder(object):
         # add acp_id to original message
         msg_dict["acp_id"] = msg_dict["dev_id"]
 
-
-        #printf(msg_dict)
-
         type_array = msg_dict["dev_id"].split("-")
 
-        msg_dict["acp_type"] = type_array[0]+"-"+type_array[1]
+        if len(type_array) >= 3:
+            msg_dict["acp_type_id"] = type_array[0]+"-"+type_array[1]
 
         if DEBUG:
             print("\nRadioBridge decode() DECODED:\n")
@@ -149,8 +147,6 @@ class Decoder(object):
     # Here we decode the original 'payload' from the RadioBridge sensor that was
     # provided in the "payload_raw" property of the message from TTN
     def decodePayload(self, msg_dict, payload_bytes):
-
-        acp_type = msg_dict["acp_type"]
 
         if DEBUG:
             print("data ",payload_bytes," len ",len(payload_bytes))

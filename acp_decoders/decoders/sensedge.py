@@ -41,6 +41,15 @@ class Decoder(object):
 
         msg_dict = json.loads(inc_msg)
 
+        # extract sensor id
+        # add acp_id to original message
+        msg_dict["acp_id"] = msg_dict["dev_id"]
+
+        type_array = msg_dict["dev_id"].split("-")
+
+        if len(type_array) >= 3:
+            msg_dict["acp_type_id"] = type_array[0]+"-"+type_array[1]
+
         if DEBUG:
             print("\nsensedge decode() DECODED:\n")
 
@@ -56,10 +65,6 @@ class Decoder(object):
 
         if DEBUG:
             print("sensedge decode() decoded {}".format(decoded))
-
-        # extract sensor id
-        # add acp_id to original message
-        msg_dict["acp_id"] = msg_dict["dev_id"]
 
         # extract timestamp
         try:
@@ -117,7 +122,6 @@ class Decoder(object):
             print("sensedge decodePayload() bytes[{}] {}".format(bytes,len(bytes)))
 
         decoded = {}
-        decoded["device"]="snsedg-water" #DEBUG other sensors from sensedge possible
 
         if len(bytes) == 7: # If Data Packet
             Status = bytes[0]

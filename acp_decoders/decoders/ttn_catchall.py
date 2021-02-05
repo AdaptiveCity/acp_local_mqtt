@@ -48,6 +48,11 @@ class Decoder(object):
         # add acp_id to original message
         msg_dict["acp_id"] = msg_dict["dev_id"]
 
+        type_array = msg_dict["dev_id"].split("-")
+
+        if len(type_array) >= 3:
+            msg_dict["acp_type_id"] = type_array[0]+"-"+type_array[1]
+
         # extract timestamp
         try:
             datetime_string = msg_dict["metadata"]["time"]

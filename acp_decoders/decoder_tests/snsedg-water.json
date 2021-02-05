@@ -1,0 +1,45 @@
+{
+  "module_name": "feedmqtt",
+  "module_id": "local",
+  "feed_id": "mqtt_ttn",
+  "filename": "1612528637.229_2021-02-05-12-37-17_snsedg-water-0935eb",
+  "filepath": "2021/02/05",
+  "acp_ts": "1612528637.229",
+  "acp_feed_ts": "1612528637.229",
+  "msg_type": "feed_mqtt",
+  "app_id": "cambridge-sensor-network2",
+  "dev_id": "snsedg-water-0935eb",
+  "hardware_serial": "0004A30B000935EB",
+  "port": 2,
+  "counter": 887,
+  "payload_raw": "AAPfP8gQGw==",
+  "metadata": {
+    "time": "2021-02-05T12:37:16.9674172Z",
+    "frequency": 867.9,
+    "modulation": "LORA",
+    "data_rate": "SF7BW125",
+    "airtime": 56576000,
+    "coding_rate": "4/5",
+    "gateways": [
+      {
+        "gtw_id": "csn-mtcap-014abf",
+        "timestamp": 1071714468,
+        "time": "2021-02-05T13:39:55Z",
+        "channel": 0,
+        "rssi": -104,
+        "snr": 3.75,
+        "rf_chain": 0
+      },
+      {
+        "gtw_id": "eui-00800000a0004cba",
+        "timestamp": 3133440692,
+        "time": "",
+        "channel": 7,
+        "rssi": -87,
+        "snr": 8.8,
+        "rf_chain": 0
+      }
+    ]
+  },
+  "mqtt_topic": "cambridge-sensor-network2/devices/snsedg-water-0935eb/up"
+}

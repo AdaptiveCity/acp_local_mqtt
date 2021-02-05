@@ -10,7 +10,10 @@ class Decoder(object):
 
         self.name = "adeunis"
 
-        self.decoded_property = settings["decoded_property"]
+        if settings is not None and "decoded_property" in settings:
+            self.decoded_property = settings["decoded_property"]
+        else:
+            self.decoded_property = "payload_cooked"
 
         return
 
@@ -65,6 +68,8 @@ class Decoder(object):
         # add acp_id to original message
         msg_dict["acp_id"] = msg_dict["dev_id"]
 
+        msg_dict["acp_type_id"] = "adeunis-test"
+
         # extract timestamp
         try:
             datetime_string = msg_dict["metadata"]["time"]
@@ -75,7 +80,7 @@ class Decoder(object):
             # add acp_ts to original message
             msg_dict["acp_ts"] = acp_ts
         except Exception as e:
-            print("Adeunis decode() {} exception {}".format(type(e), e))
+            print("Adeunis decode() {} exception while extracting timestamp (no metadata property in message?) {}".format(type(e), e))
             # DecoderManager will add acp_ts using server time
 
         return msg_dict
@@ -112,7 +117,6 @@ class Decoder(object):
             print("Adeunis decodePayload() bytes[{}] {}".format(bytes,len(bytes)))
 
         decoded = {}
-        decoded["device"]="adeunis_test"
 
         offset = 1 # index into payload for next field
 

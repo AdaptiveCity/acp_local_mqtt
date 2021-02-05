@@ -20,7 +20,7 @@ class Decoder:
     ## This decoder currently appends the acp_id and the acp_ts field to the payload
     def decode(self, topic, msg_bytes):
         # Get the sensor id from the topic
-        sid = topic.split('/')[1]
+        acp_id = topic.split('/')[1]
 
         inc_msg = str(msg_bytes,'utf-8')
 
@@ -29,7 +29,12 @@ class Decoder:
         except JSONDecodeError:
             msg_dict = { "message": msg_bytes }
 
-        msg_dict["acp_id"] = sid
+        msg_dict["acp_id"] = acp_id
+
+        id_parts = acp_id.split('-')
+
+        if len(id_parts) >= 3:
+            msg_dict["acp_type_id"] = id_parts[0]+'-'+id_parts[1]
 
         # DecoderManager will add "acp_ts"
 
