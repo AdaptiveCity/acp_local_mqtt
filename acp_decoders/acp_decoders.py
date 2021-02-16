@@ -168,7 +168,7 @@ class DecoderManager():
     # Sensor data message handler for incoming messages
     ###############################################################
 
-    def handle_input_message(self, topic, msg_bytes):
+    def handle_input_message(self, topic, msg_bytes, testing=False):
         acp_ts = self.ts_string()
         msg_is_decoded = False
         for decoder in self.decoders:
@@ -188,7 +188,13 @@ class DecoderManager():
                 msg_is_decoded = True
                 break # terminate the loop through decoders when first is found
 
-        if msg_is_decoded:
+        # testing=True will bypass MQTT and return the decoded message
+        if testing:
+            if msg_is_decoded:
+                return decoded
+            else:
+                print("Message not decoded")
+        elif msg_is_decoded:
             self.send_output_message(topic, decoded)
         else:
             print("{} Incoming message not decoded\n{}\n".format(
