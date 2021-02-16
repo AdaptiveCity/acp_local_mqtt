@@ -1,0 +1,122 @@
+{
+    "end_device_ids": {
+        "device_id": "rad-ath-003d0f",
+        "application_ids": {
+            "application_id": "cambridge-net-3"
+        },
+        "dev_eui": "A81758FFFE0503E0",
+        "join_eui": "0000000000000000",
+        "dev_addr": "260BFDD1"
+    },
+    "correlation_ids": [
+        "as:up:01EYN1DG8WKGEMK1Z2JHR3N03E",
+        "ns:uplink:01EYN1DG2E3ZVX8JARTYE9KWMF",
+        "pba:conn:up:01EYASVERJSCVJPDWAG8DNNWD0",
+        "pba:uplink:01EYN1DG255A0SRVTDPAR9FWQ5",
+        "rpc:/ttn.lorawan.v3.GsNs/HandleUplink:01EYN1DG2EDP1QEE1Y4R65WBVW",
+        "rpc:/ttn.lorawan.v3.NsAs/HandleUplink:01EYN1DG8VGW78BZHEK6E36F91"
+    ],
+    "received_at": "2021-02-16T09:05:53.950366943Z",
+    "uplink_message": {
+        "session_key_id": "AXep7BaBq48uNMmXj7gXrA==",
+        "f_port": 5,
+        "f_cnt": 24,
+        "frm_payload": "Ew0ABiBkAA==",
+        "rx_metadata": [
+            {
+                "gateway_ids": {
+                    "gateway_id": "packetbroker"
+                },
+                "packet_broker": {
+                    "message_id": "01EYN1DG255A0SRVTDPAR9FWQ5",
+                    "forwarder_net_id": "000013",
+                    "forwarder_tenant_id": "ttn",
+                    "forwarder_cluster_id": "ttn-v2-eu-3",
+                    "home_network_net_id": "000013",
+                    "home_network_tenant_id": "ttn",
+                    "home_network_cluster_id": "ttn-eu1",
+                    "hops": [
+                        {
+                            "received_at": "2021-02-16T09:05:53.733685596Z",
+                            "sender_address": "40.113.68.198",
+                            "receiver_name": "router-dataplane-696b87d68f-h6gdr",
+                            "receiver_agent": "pbdataplane/1.2.0 go/1.15.8 linux/amd64"
+                        },
+                        {
+                            "received_at": "2021-02-16T09:05:53.735712109Z",
+                            "sender_name": "router-dataplane-696b87d68f-h6gdr",
+                            "sender_address": "kafkapb://router?topic=forwarder_uplink",
+                            "receiver_name": "router-56fd774c8b-8gknk",
+                            "receiver_agent": "pbrouter/1.2.0 go/1.15.8 linux/amd64"
+                        },
+                        {
+                            "received_at": "2021-02-16T09:05:53.738587944Z",
+                            "sender_name": "router-56fd774c8b-8gknk",
+                            "sender_address": "kafkapb://ttn-eu1?topic=deliver_000013.ttn.ttn-eu1_uplink",
+                            "receiver_name": "router-dataplane-696b87d68f-h6gdr",
+                            "receiver_agent": "pbdataplane/1.2.0 go/1.15.8 linux/amd64"
+                        }
+                    ]
+                },
+                "rssi": -37,
+                "channel_rssi": -37,
+                "snr": 9.2,
+                "uplink_token": "eyJnIjoiWlhsS2FHSkhZMmxQYVVwQ1RWUkpORkl3VGs1VE1XTnBURU5LYkdKdFRXbFBhVXBDVFZSSk5GSXdUazVKYVhkcFlWaFphVTlwU2tkamJUVjZUa2hvVEU5SFNqSmtWVWt4VjJ4ck1VbHBkMmxrUjBadVNXcHZhVTB4UW5Sa2VtUkVWRlU1ZW1WcmRIaFhXR2Q2V1RCd1JWWlZjelJhZVVvNUxsVkVlR1ZoZUZkcFRIcGhWbDh0V0RCRFJuQnhObmN1Y0RKV1dGcDNjSFl3UWxVMU5tMUhiUzVzWmt0RmRDMWZiMHM1VW1sQ1NqZEhTRFV4WmpKZlpHNU5YMnB5WXpSYVRtNXRSMjFtYUY5eldYUktOVWx2TjA5VVZuUnhSa3BpUW5BNFlUUldRbWRNWm1aalNXdFFXRTUxT0dSamNsSmhUbXhaVlRCRlYyaDRObTlKVTA1VlowWmhlV3hTZFRoR1QwNTZYMEZ4UTJSNVNWZHJPWE5GTjE4d1FVNXBUV0pxYTI0d2MybEZXbEJVZDNZNWFHNHlXbEZGYjFkQ05qQjJSRkprTW1kaFIwaFZTRlUwWTFSdE9EVndkVkJSTGw4MVdqUnViSEF4YzFablIwMDRZV3BTUkZKRGJGRT0iLCJhIjp7ImZuaWQiOiIwMDAwMTMiLCJmdGlkIjoidHRuIiwiZmNpZCI6InR0bi12Mi1ldS0zIn19"
+            },
+            {
+                "gateway_ids": {
+                    "gateway_id": "packetbroker"
+                },
+                "packet_broker": {
+                    "message_id": "01EYN1DG24MWN9MWSM0CW3FQ9C",
+                    "forwarder_net_id": "000013",
+                    "forwarder_tenant_id": "ttn",
+                    "forwarder_cluster_id": "ttn-v2-eu-2",
+                    "home_network_net_id": "000013",
+                    "home_network_tenant_id": "ttn",
+                    "home_network_cluster_id": "ttn-eu1",
+                    "hops": [
+                        {
+                            "received_at": "2021-02-16T09:05:53.732577341Z",
+                            "sender_address": "52.169.73.251",
+                            "receiver_name": "router-dataplane-696b87d68f-tcdrs",
+                            "receiver_agent": "pbdataplane/1.2.0 go/1.15.8 linux/amd64"
+                        },
+                        {
+                            "received_at": "2021-02-16T09:05:53.734783417Z",
+                            "sender_name": "router-dataplane-696b87d68f-tcdrs",
+                            "sender_address": "kafkapb://router?topic=forwarder_uplink",
+                            "receiver_name": "router-56fd774c8b-knwqr",
+                            "receiver_agent": "pbrouter/1.2.0 go/1.15.8 linux/amd64"
+                        },
+                        {
+                            "received_at": "2021-02-16T09:05:53.737408511Z",
+                            "sender_name": "router-56fd774c8b-knwqr",
+                            "sender_address": "kafkapb://ttn-eu1?topic=deliver_000013.ttn.ttn-eu1_uplink",
+                            "receiver_name": "router-dataplane-696b87d68f-h6gdr",
+                            "receiver_agent": "pbdataplane/1.2.0 go/1.15.8 linux/amd64"
+                        }
+                    ]
+                },
+                "time": "2021-02-16T10:09:22Z",
+                "rssi": -46,
+                "channel_rssi": -46,
+                "snr": 9.25,
+                "uplink_token": "eyJnIjoiWlhsS2FHSkhZMmxQYVVwQ1RWUkpORkl3VGs1VE1XTnBURU5LYkdKdFRXbFBhVXBDVFZSSk5GSXdUazVKYVhkcFlWaFphVTlwU21Ga1dGSlBXVEkxVkZGck5YZFZSM2hvWkZoV1QwbHBkMmxrUjBadVNXcHZhVk5FU2xKak1VWkhUVVZHVVZveU1WZFhWVEUyVVZjeFVWTnVTblZrZVVvNUxqWkhaVXRDZGpCc1dESm1PVkZWVDA5MlVHTnlPSGN1UzBaTlZWZGFYMmt3Umw5Mk1UZEdUaTUyUmtKU1JGcFBTRjl6VnpaalVuWlViV1ZTWldORVpVZHhVMmhMTlV3NWNsVjFRMEZhTkdkSllXOXFkRzFOYkZCbVYyUXdVMmh4UTFKcE5FWm9UQzE0YldocFFURjNNa3hJYnkxeFRWSnZlRk5hUkRCVWEzRkJVMHAwTFU1a1FWY3phR2x5ZHprM2JuSnRaVWd3V2t0SFlUVkNaRk16TldKRGVrSmxjMTlwWjBRd01WVnhRbFZHY0hsSE5pNDBXbU0zZWtaMU9Vb3pibmQ2VkU5bGNHVldjVGhCIiwiYSI6eyJmbmlkIjoiMDAwMDEzIiwiZnRpZCI6InR0biIsImZjaWQiOiJ0dG4tdjItZXUtMiJ9fQ=="
+            }
+        ],
+        "settings": {
+            "data_rate": {
+                "lora": {
+                    "bandwidth": 125000,
+                    "spreading_factor": 7
+                }
+            },
+            "data_rate_index": 5,
+            "coding_rate": "4/5",
+            "frequency": "867700000"
+        },
+        "received_at": "2021-02-16T09:05:53.742555356Z",
+        "consumed_airtime": "0.046336s"
+    }
+}

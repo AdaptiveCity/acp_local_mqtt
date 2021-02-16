@@ -1,12 +1,11 @@
 {
     "decoders": [
-                    "elsys",
-                    "adeunis",
-                    "radiobridge",
-                    "sensedge",
+                    "elsys-v3",
+                    "adeunis-v3",
+                    "radiobridge-v3",
+                    "sensedge-v3",
                     "mqttlocal",
-                    "ttn_catchall",
+                    "ttn_catchall-v3",
                     "zigbee_catchall"
                 ]
 }
-

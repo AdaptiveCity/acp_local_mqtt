@@ -129,6 +129,23 @@ kill -SIGALRM <pid>
 
 The pid can be found interactively with `ps aux | grep acp_mqtt_decoders`
 
+## Testing decoders
+
+The `acp_decoders.py` can be instantiated in 'test mode' with `./decoders_test.sh <topic> <json file>` where
+`<topic>` is the MQTT topic the sensor reading is expected on, and `<json file>` contains the JSON object of
+the incoming reading. E.g.:
+```
+source venv/bin/activate
+./decoders_test.sh cambridge-sensor-network2/devices/elsys-co2-010203/up decoder_tests/elsys-co2.json
+```
+and
+```
+./decoders_test.sh v3/cambridge-net-3@ttn/devices/elsys-co2-010203/up decoder_tests/elsys-co2-v3.json
+```
+The test script will instantiate a new `DecoderManager` object from `acp_decoders.py` and call its
+`handle_input_message()` method *without* involving MQTT at all (i.e. the sensor reading is read from the
+given file. The output (stdout) can be viewed to see some status info and the decoded message.
+
 ## Outline program structure
 
 This project uses 'importlib' to create a basic python 'plugin' capability, dynamically loading

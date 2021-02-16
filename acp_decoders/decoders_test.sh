@@ -41,9 +41,28 @@ if __name__ == '__main__':
 
     decoded = dm.handle_input_message(args.topic,msg_bytes,testing=True)
 
-    print("Decoded Summary:")
-    print(f'  Sensor: {decoded["acp_id"]}')
-    print(f'  acp_ts: {decoded["acp_ts"]} (UTC {datetime.fromtimestamp(float(decoded["acp_ts"]),tz=None)})')
-    print(f'  acp_type_id: {decoded["acp_type_id"]}')
-    print("Decoded Message:")
+    print("\nDecoded Message:")
     print(json.dumps(decoded,indent=4))
+
+    print("\nDecoded Summary:")
+    # acp_id
+    print(f'  Sensor: {decoded["acp_id"]}')
+
+    # acp_ts
+    acp_ts_datetime = datetime.fromtimestamp(float(decoded["acp_ts"]),tz=None)
+    timestamp_delta = (datetime.now() - acp_ts_datetime).total_seconds()
+    print(f'  acp_ts: {decoded["acp_ts"]} (UTC {acp_ts_datetime})')
+    if timestamp_delta < 1:
+        print(f'          Timestamp not recovered from message, now() used instead')
+
+    # acp_type_id
+    if "acp_type_id" in decoded:
+        print(f'  acp_type_id: {decoded["acp_type_id"]}')
+    else:
+        print(f'  acp_type_id not found in decoded message')
+
+    # payload_cooked
+    if "payload_cooked" in decoded:
+        print(f'  payload_cooked: {json.dumps(decoded["payload_cooked"],indent=4)}')
+    else:
+        print(f'  payload_cooked not found in decoded message')
