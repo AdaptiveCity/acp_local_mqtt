@@ -75,6 +75,7 @@ class DecoderManager():
         await self.connect_input_mqtt()
 
     async def connect_input_mqtt(self):
+        print("{} connect_input_mqtt\n".format(self.ts_string()),file=sys.stderr,flush=True)
         self.input_client = MQTTClient(None) # auto-generate client id
 
         self.input_client.on_connect = self.input_on_connect
@@ -92,6 +93,7 @@ class DecoderManager():
         await self.input_client.connect(host, port, keepalive=20, version=MQTTv311)
 
     async def connect_output_mqtt(self):
+        print("{} connect_output_mqtt\n".format(self.ts_string()),file=sys.stderr,flush=True)
         self.output_client = MQTTClient(None) # auto-generate client id
 
         self.output_client.on_connect = self.output_on_connect
@@ -172,21 +174,26 @@ class DecoderManager():
         acp_ts = self.ts_string()
         msg_is_decoded = False
         for decoder in self.decoders:
-            if decoder["decoder"].test(topic, msg_bytes):
-                decoded = decoder["decoder"].decode(topic, msg_bytes)
-                # If no acp_ts from decoder, insert from server time
-                if not "acp_ts" in decoded:
-                    decoded["acp_ts"] = acp_ts
+            try:
+                if decoder["decoder"].test(topic, msg_bytes):
+                    decoded = decoder["decoder"].decode(topic, msg_bytes)
+                    # If no acp_ts from decoder, insert from server time
+                    if not "acp_ts" in decoded:
+                        decoded["acp_ts"] = acp_ts
 
-                if True or DEBUG:
-                    print("{} {} decoded by {}".format(
-                        acp_ts,
-                        decoded["acp_id"],
-                        decoder["name"]), flush=True)
-                #debug testing timeout, disabled send:
-                #self.send_output_message(topic, decoded)
-                msg_is_decoded = True
-                break # terminate the loop through decoders when first is found
+                    if True or DEBUG:
+                        print("{} {} decoded by {}".format(
+                            acp_ts,
+                            decoded["acp_id"],
+                            decoder["name"]), flush=True)
+                    #debug testing timeout, disabled send:
+                    #self.send_output_message(topic, decoded)
+                    msg_is_decoded = True
+                    break # terminate the loop through decoders when first is found
+            except:
+                print("{} acp_decoders.py exception from decoder {}:".format(acp_ts, decoder["name"]),
+                      file=sys.stderr,
+                      flush=True)
 
         # testing=True will bypass MQTT and return the decoded message
         if testing:
@@ -232,7 +239,8 @@ class DecoderManager():
     ###############################################################
 
     def input_on_connect(self, client, flags, rc, properties):
-        print('INPUT Connected to {} as {}'.format(
+        print('{} INPUT Connected to {} as {}'.format(
+            self.ts_string(),
             self.settings["input_mqtt"]["host"],
             self.settings["input_mqtt"]["user"]),file=sys.stderr, flush=True)
         client.subscribe('#', qos=0)
@@ -272,7 +280,8 @@ class DecoderManager():
         print('OUTPUT Connected to {} as {}'.format(
             self.settings["output_mqtt"]["host"],
             self.settings["output_mqtt"]["user"]), flush=True)
-        print('OUTPUT Connected to {} as {}'.format(
+        print('{} INPUT Connected to {} as {}'.format(
+            self.ts_string(),
             self.settings["output_mqtt"]["host"],
             self.settings["output_mqtt"]["user"]),file=sys.stderr,flush=True)
 
@@ -286,7 +295,7 @@ class DecoderManager():
         print('OUTPUT RECV MSG?:', msg_bytes, flush=True)
 
     def output_on_subscribe(self, client, mid, qos, properties):
-        print('OUTPUT SUBSCRIBED? to {}', flush=True)
+        print('{} OUTPUT SUBSCRIBED?'.format(self.ts_string()), flush=True)
 
     ###############################################################
     # CLEANUP on EXIT SIGNAL (SIGINT or SIGTERM)
