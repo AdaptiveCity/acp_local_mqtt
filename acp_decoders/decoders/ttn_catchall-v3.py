@@ -20,7 +20,7 @@ class Decoder(object):
         #regular topic format:
         #cambridge-sensor-network/devices/ttn_catchall-test-3/up
 
-        if ("cambridge-sensor-network" in topic or "v3/cambridge-net-" in topic):  #check if application name appears in the topic
+        if topic.startswith("v3/"):  #check if application name appears in the topic
             if DEBUG:
                 print("ttn_catchall test() success")
             return True

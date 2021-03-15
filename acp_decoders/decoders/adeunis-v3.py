@@ -24,7 +24,7 @@ class Decoder(object):
         #regular topic format:
         #cambridge-sensor-network/devices/adeunis-test-3/up
 
-        if ("adeunis" in topic):  #check if decoder name appears in the topic
+        if topic.startswith("v3/") and "/adeunis-test-" in topic:  #check if decoder name appears in the topic
             if DEBUG:
                 print("Adeunis test() success")
             return True
@@ -157,7 +157,7 @@ class Decoder(object):
             #//decoded['lat_mins'] = minutes;
 
             lat_south = bytes[offset+3] & 0x01
-            decoded['latitude'] = (-1 if lat_south  else 1) * degrees + minutes / 60
+            decoded['latitude'] = round((-1 if lat_south  else 1) * degrees + minutes / 60, 8)
 
             offset += 4
 
@@ -170,7 +170,7 @@ class Decoder(object):
             #//decoded['lng_mins'] = minutes;
 
             lng_west = bytes[offset+3] & 0x01
-            decoded['longitude'] = (-1 if lng_west else 1) * degrees + minutes / 60
+            decoded['longitude'] = round((-1 if lng_west else 1) * degrees + minutes / 60, 8)
 
             decoded['gps_reception'] = bytes[offset+4] >> 4
             decoded['gps_satellites'] = bytes[offset+4] & 0x0F

@@ -1,0 +1,139 @@
+{
+  "end_device_ids": {
+    "device_id": "elsys-co2-0460ec",
+    "application_ids": {
+      "application_id": "cambridge-net-3"
+    },
+    "dev_eui": "A81758FFFE0460EC",
+    "join_eui": "70B3D57ED001AB65",
+    "dev_addr": "260B2517"
+  },
+  "correlation_ids": [
+    "as:up:01F0RMBEYFWEZM95AFK07NYA22",
+    "gs:conn:01F0RM3WEKEYE8BYYBWZJTFYZ6",
+    "gs:up:host:01F0RM3WF8WMAY4JQS2TERSSY9",
+    "gs:uplink:01F0RMBEQSXE84AHF9PPVQ11FC",
+    "ns:uplink:01F0RMBEQVNH9BP235F37SH5DT",
+    "rpc:/ttn.lorawan.v3.GsNs/HandleUplink:01F0RMBEQV169R1RZZDQ48XZM0",
+    "rpc:/ttn.lorawan.v3.NsAs/HandleUplink:01F0RMBEYEQXHXC7FF2BPJH0VV"
+  ],
+  "received_at": "2021-03-14T15:05:56.943862548Z",
+  "uplink_message": {
+    "session_key_id": "AXguDbnFZv3oBO7Qak1wgg==",
+    "f_port": 5,
+    "f_cnt": 90,
+    "frm_payload": "AQDJAh8EAGwFAAYBlgcOTQ==",
+    "rx_metadata": [
+      {
+        "gateway_ids": {
+          "gateway_id": "csn-mtcdtip-005f06",
+          "eui": "00800000A0005F06"
+        },
+        "time": "2021-03-14T15:05:56.711884Z",
+        "timestamp": 594838644,
+        "rssi": -65,
+        "channel_rssi": -65,
+        "snr": 7.8,
+        "uplink_token": "CiAKHgoSY3NuLW10Y2R0aXAtMDA1ZjA2EggAgAAAoABfBhD0iNKbAhoMCNTMuIIGENml3dsCIKDKlfmnEQ==",
+        "channel_index": 5
+      },
+      {
+        "gateway_ids": {
+          "gateway_id": "packetbroker"
+        },
+        "packet_broker": {
+          "message_id": "01F0RMBEQXZE2SBAKP0D1QVD79",
+          "forwarder_net_id": "000013",
+          "forwarder_tenant_id": "ttn",
+          "forwarder_cluster_id": "ttn-v2-eu-2",
+          "home_network_net_id": "000013",
+          "home_network_tenant_id": "ttn",
+          "home_network_cluster_id": "ttn-eu1",
+          "hops": [
+            {
+              "received_at": "2021-03-14T15:05:56.733261489Z",
+              "sender_address": "52.169.73.251",
+              "receiver_name": "router-dataplane-565fcb4465-5rx2s",
+              "receiver_agent": "pbdataplane/1.4.3 go/1.16 linux/amd64"
+            },
+            {
+              "received_at": "2021-03-14T15:05:56.734218136Z",
+              "sender_name": "router-dataplane-565fcb4465-5rx2s",
+              "sender_address": "forwarder_uplink",
+              "receiver_name": "router-6bf8b69d5-4ddhc",
+              "receiver_agent": "pbrouter/1.4.3 go/1.16 linux/amd64"
+            },
+            {
+              "received_at": "2021-03-14T15:05:56.735807909Z",
+              "sender_name": "router-6bf8b69d5-4ddhc",
+              "sender_address": "deliver.000013_ttn_ttn-eu1.uplink",
+              "receiver_name": "router-dataplane-565fcb4465-5rx2s",
+              "receiver_agent": "pbdataplane/1.4.3 go/1.16 linux/amd64"
+            }
+          ]
+        },
+        "time": "2021-03-14T15:05:56Z",
+        "rssi": -84,
+        "channel_rssi": -84,
+        "snr": 7.5,
+        "uplink_token": "eyJnIjoiWlhsS2FHSkhZMmxQYVVwQ1RWUkpORkl3VGs1VE1XTnBURU5LYkdKdFRXbFBhVXBDVFZSSk5GSXdUazVKYVhkcFlWaFphVTlwU1hSWldHeDZURmRHYlZvd05XOVdiVmswVkc1Wk5VbHBkMmxrUjBadVNXcHZhVk51UWpOamJUQXhZVzF3UTJKclNuZGtWRkl6Vkd4d2EwMVlaRzlhZVVvNUxsTk9jMUIwU2s5c1VYQjFPRlZRYkY4MWJVOU1UVkV1ZUVJM1ZIRndOa0pUYkdndFl6SkdiUzV1TkdJd2J6VllkR1ozZFZZMmJsSlNjR1pSYnpOUlFuRmxhRW8zWWtKSFp5MTRORjlLUVZjMU4xSnRPVkIzV0ZsNVMxUnVkM2xNUlRScFUyZHlaMFU1T0VNdE1EQnhZbVZvTW5acmR5MUlSbTh6Y1haeFkyZHVNVFl3V0daSmNERnFiazlCWDNaM05IZzFlR2xyTkVaU05EaEVibGhGUVRsU1lsaHljVGN4TjAxVVJHSTVZV0ZLTlV3eVduSXdUamxxTTJOeExuYzNaamx4WDBZMU1GTm9hWFZEWlZsVVRYcENUVUU9IiwiYSI6eyJmbmlkIjoiMDAwMDEzIiwiZnRpZCI6InR0biIsImZjaWQiOiJ0dG4tdjItZXUtMiJ9fQ=="
+      },
+      {
+        "gateway_ids": {
+          "gateway_id": "packetbroker"
+        },
+        "packet_broker": {
+          "message_id": "01F0RMBERDTVBRK5NBVWZ44NHC",
+          "forwarder_net_id": "000013",
+          "forwarder_tenant_id": "ttn",
+          "forwarder_cluster_id": "ttn-v2-eu-2",
+          "home_network_net_id": "000013",
+          "home_network_tenant_id": "ttn",
+          "home_network_cluster_id": "ttn-eu1",
+          "hops": [
+            {
+              "received_at": "2021-03-14T15:05:56.749926635Z",
+              "sender_address": "52.169.73.251",
+              "receiver_name": "router-dataplane-565fcb4465-5pbr7",
+              "receiver_agent": "pbdataplane/1.4.3 go/1.16 linux/amd64"
+            },
+            {
+              "received_at": "2021-03-14T15:05:56.756924216Z",
+              "sender_name": "router-dataplane-565fcb4465-5pbr7",
+              "sender_address": "forwarder_uplink",
+              "receiver_name": "router-6bf8b69d5-rbnjg",
+              "receiver_agent": "pbrouter/1.4.3 go/1.16 linux/amd64"
+            },
+            {
+              "received_at": "2021-03-14T15:05:56.759773014Z",
+              "sender_name": "router-6bf8b69d5-rbnjg",
+              "sender_address": "deliver.000013_ttn_ttn-eu1.uplink",
+              "receiver_name": "router-dataplane-565fcb4465-5rx2s",
+              "receiver_agent": "pbdataplane/1.4.3 go/1.16 linux/amd64"
+            }
+          ]
+        },
+        "time": "2021-03-14T15:05:36Z",
+        "rssi": -101,
+        "channel_rssi": -101,
+        "snr": 6.25,
+        "uplink_token": "eyJnIjoiWlhsS2FHSkhZMmxQYVVwQ1RWUkpORkl3VGs1VE1XTnBURU5LYkdKdFRXbFBhVXBDVFZSSk5GSXdUazVKYVhkcFlWaFphVTlwU2pWaWJGSXlaR3RvUW1OWVVscFBXR3hJWVZVeFYwbHBkMmxrUjBadVNXcHZhVmRGTUROUlZFWkZZVEJXVVdSRk9VNU9NV1JVVmxaU2NFMTZSa1JhZVVvNUxsVnpVekowWnkxRlRITmpWVjlVYm1aTFNIb3hNVUV1VGs1SU1tSkJNMHhxVVdKTFR6RTNVeTVTTmt4bWFrZFBaM05mWTFGNWVVbGFlbWg1Wm0xS1R6Vm1Vbmh4TUVaUVVWSmxiVVJ1VkhKNE1YRjRjVlY0WTA5bk9UVkthakZIUVRKT04xTnliVzFVY0ZGWlRrdFdNVzFsVDJ4S1NuQnlTVFJXUkV0UWN6RTJTak52T1d0MVltRklObFJpZFc1aVVuUmFYM3B6TUVFMVJYaG1kbWMzUW5SVU0yUm9ZMFZzT1ZCamIwczRjbmRaTWtwNlVpNXROMDVRV25JME1qQmxORVo0UVhaWldFRmxiMXBSIiwiYSI6eyJmbmlkIjoiMDAwMDEzIiwiZnRpZCI6InR0biIsImZjaWQiOiJ0dG4tdjItZXUtMiJ9fQ=="
+      }
+    ],
+    "settings": {
+      "data_rate": {
+        "lora": {
+          "bandwidth": 125000,
+          "spreading_factor": 7
+        }
+      },
+      "data_rate_index": 5,
+      "coding_rate": "4/5",
+      "frequency": "867500000",
+      "timestamp": 594838644,
+      "time": "2021-03-14T15:05:56.711884Z"
+    },
+    "received_at": "2021-03-14T15:05:56.731354231Z",
+    "consumed_airtime": "0.066816s"
+  }
+}

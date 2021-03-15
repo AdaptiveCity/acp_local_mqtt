@@ -73,7 +73,7 @@ class Decoder(object):
         #regular topic format:
         #csn-radiobridge/devices/<acp_id>/up
 
-        if ("/rad-" in topic):  #check if decoder name appears in the topic
+        if topic.startswith("v3/") and "/rad-" in topic:  #check if decoder name appears in the topic
             if DEBUG:
                 print("RadioBridge test() success")
             return True

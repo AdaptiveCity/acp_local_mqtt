@@ -24,7 +24,7 @@ class Decoder(object):
         #regular topic format:
         #cambridge-sensor-network/devices/adeunis-test-3/up
 
-        if ("snsedg" in topic):  #check if decoder name appears in the topic
+        if topic.startswith("v3/") and "/snsedg-" in topic:  #check if decoder name appears in the topic
             if DEBUG:
                 print("sensedge test() success")
             return True

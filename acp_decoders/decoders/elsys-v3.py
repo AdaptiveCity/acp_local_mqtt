@@ -70,7 +70,7 @@ class Decoder(object):
         #regular topic format:
         #cambridge-sensor-network/devices/elsys-ems-048f2b/up
 
-        if ("elsys" in topic):  #check if decoder name appears in the topic
+        if topic.startswith("v3/") and "/elsys-" in topic:  #check if decoder name appears in the topic
             if DEBUG:
                 print("Elsys test() success")
             return True
