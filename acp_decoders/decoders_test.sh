@@ -41,6 +41,9 @@ if __name__ == '__main__':
 
     decoded = dm.handle_input_message(args.topic,msg_bytes,testing=True)
 
+    if decoded is None:
+        exit(1)
+
     print("\nDecoded Message:")
     print(json.dumps(decoded,indent=4))
 

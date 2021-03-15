@@ -89,7 +89,7 @@ class Decoder(object):
     def decode(self, topic, message_bytes):
         # First lets set a flag for which version of TTN we're dealing with
         ttn_version = 3 if topic.startswith("v3/") else 2
-        
+
         if DEBUG:
             print(f'\nElsys decode() V{ttn_version}\n{message_bytes}')
 
