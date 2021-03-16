@@ -222,9 +222,9 @@ class DecoderManager():
                     message.topic), flush=True)
             self.handle_input_message(message.topic, message.payload)
         elif log_level < 3:
-            print("{} acp_decoders skipping INPUT MSG on output topic: {}\n".format(
+            print("{} acp_decoders skipping INPUT MSG on output topic: {}".format(
                 self.ts_string(),
-                message.topic),file=sys.stderr, flush=True)
+                message.topic),flush=True)
 
     def on_disconnect(self,client, userdata, rc):
         print("\n{} acp_decoders INPUT Disconnected".format(
